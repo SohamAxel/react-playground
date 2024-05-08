@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import Name from "./Components/Name";
+import { NameClass } from "./Components/NameClass";
+import TodoList from "./Components/TodoList";
+import TodoListItem from "./Components/TodoListItem";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => (
+  <>
+    <div id="largeDiv" className="large">
+      <label htmlFor="ur-input">Your Input</label>
+      <input type="number" value={3} id="ur-input" />
+    </div>
+    <div>
+      <h1>Todo List</h1>
+      <TodoList />
+    </div>
+    <div>
+      <Name name="John Doe"/>
+      <NameClass name="Jenn Doe"/>
+    </div>
+    <div>
+      <TodoListItem isComplete >Test Checkbox</TodoListItem>
+    </div>
+  </>
+);
+export default App;
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+/**
+ * Notes:
+ *  1. React components should have the first letter capitalized. If not, react compiler will treat that component
+ *  as a normal html component.
+ * 
+ *  2. undefied, false, null will not print any content in the page.
+ * 
+ *  3. Multiple components can be in a single class, in general all components should be in seperate files unless
+ *  we need a tightly coupled architechture.
+ * 
+ *  4. A prop with no value defaults to true.
+ * 
+ *  5. DOM should not be manupulated directly in React, React is a declarative UI but vanilla JS is imperative UI.
+ * 
+ *  6. Import assests(css, images, json, ... ) directly to jsx
+ */
