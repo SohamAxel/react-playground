@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Counter from "./Components/Counter";
 import ArrayStateProject from "./Components/ArrayStateProject";
+import CounterWithNameProject from "./Components/CounterWithNameProject";
+import CounterWithNameProjectClass from "./Components/CounterWithNameProjectClass";
 
 const slowFunction = () => {
   // Very slow function
@@ -19,6 +21,14 @@ function App() {
       <h1 onClick={clickHandler}>Hi {name}</h1>
       <Counter />
       <ArrayStateProject />
+      <br />
+      <br />
+      <br />
+      <CounterWithNameProject />
+      <br />
+      <br />
+      <br />
+      <CounterWithNameProjectClass />
     </>
   );
 }
