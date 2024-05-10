@@ -1,6 +1,11 @@
 # UseState
 
-State is something which changes overtime and when it changes we need to rerender the component so that the change is updated in the UI. 
+State is something which changes overtime and when it changes we need to rerender the component so that the change is updated in the UI.
+
+**Notes**
+1. States are immutable, hence we need to return a new state and not overwrite the same one.
+2. Change in state re-render's the component
+3. If the new state value depends on prev state value, callback function must be used in setState function.
 
 ## Function based Component
 useState() hook allows us to set a state and define a setter function which can update the state value and re-render the component.
@@ -67,3 +72,28 @@ Class based components handle state internally using the constructor. We set obj
 If a slow function is passed in the default setter in constructor, this will get executed only once and not on every component re-render.
 
 As the state is handled in class internally using "this", it's important we don't lose the class "this" binding while creating new methods/functions to handle action. We can ensure it is not lost by manually binding class "this" to the method/function or we can use arrowfunction inside a method which has the class "this" binding.
+
+## General
+
+Direct state manupulation is not allowed as state are immutable.
+
+The following won't work -
+```JSX
+const addElementAtStart = (element) => {
+  setArray(oldArray => {
+    oldArray.push(element)
+    return oldArray
+  })
+}
+```
+This is will work -
+```JSX
+const addElementAtStart = (element) => {
+  setArray(oldArray => {
+    return [
+      element,
+      ...oldArray
+    ]
+  })
+}
+```
