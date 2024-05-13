@@ -47,6 +47,8 @@ How to use the hook -
   }, [name, age]);
 ```
 
+**Note: useEffect runs after the component is rendered in the component.**
+
 ### Class Component
 Hooks are not allowed in class components. The lifecycle parts in class component is managed using following class methods
 1. componentDidUpdate
