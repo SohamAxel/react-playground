@@ -1,8 +1,63 @@
-# React + Vite
+# Advanced Components
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Condtional Rendering
 
-Currently, two official plugins are available:
+**using Short circuting**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```JSX
+{A && B}
+```
+
+In javascript the above statement(Considering A and B are booleans) works in the following way,
+
+1. If A is true then it checks for the B value, if its true, result is true
+2. If A is false then it will not check for B and return false, and false renders nothing in jsx (as we are using and statement)
+
+We can utilize this to our advantage like this
+
+```JSX
+{ A == 25 && (<h1>"I am executed"</h1>)}
+```
+
+Hence, as per js if the value of A is true, it will check for B, i.e. the h1 tag, and it will print that.
+Same we can do with OR operator (||),
+
+```JSX
+{A || B}
+```
+
+if A is present it will print A, if A is falsy it will print B.
+
+**using Ternary Operator**
+
+one line if else
+
+```JSX
+  { A == 25 ? "I am 25" : "I am not 25"}
+```
+
+## Rendering Lists
+
+To print list use map function in javascript with a key. Key is necessary as React uses it as a identifier for each List element.
+
+## Fragments
+
+To remove element dependency for react components. Every react component must have a single parent, if we use div or any other element as parent, it might create unnecessary hierarchy in the DOM which might not be required. Hence if we use fragments all the elements inside the component will render in the dom as siblings, without any wrapping div.
+
+```JSX
+  <>
+    <h1>Hello</h1>
+    <p>World</p>
+  <>
+```
+
+If we want to add key to a list render, where the elements is being rendered as fragments use React.Fragment instead of <>
+
+```JSX
+  items.map(item => (
+    <React.Fragment key={item.id}>
+      <h1>Hello</h1>
+      <p>World</p>
+    </React.Fragment>
+  ))
+```
