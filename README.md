@@ -61,3 +61,15 @@ If we want to add key to a list render, where the elements is being rendered as 
     </React.Fragment>
   ))
 ```
+
+## Custom HTML
+
+```JSX
+const CUSTOM_HTML = `
+  <h1>Hi</h1>
+`
+
+function App() { return dangerouslySetInnerHTML={{ _html: CUSTOM_HTML }} }
+```
+
+This should almost never be used as it has security implications. If a user input is present here, outsiders can easily inject scripts and hack the site(cross-site scripting)

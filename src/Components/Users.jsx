@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import User from "./User";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -33,7 +34,7 @@ const Users = () => {
       ) : (
         <ul>
           {users.map((user) => (
-            <li key={user.id}>{user.name}</li>
+            <User {...user} key={user.id} />
           ))}
         </ul>
       )}
