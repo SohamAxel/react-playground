@@ -1,16 +1,24 @@
-import { useState } from "react";
-
 const List = ({ item, setList }) => {
-  const [isChecked, setIsChecked] = useState(false);
   return (
     <li className="list-item">
       <label className="list-item-label">
         <input
           type="checkbox"
           data-list-item-checkbox
-          checked={isChecked}
+          checked={item.completed}
           onChange={(e) => {
-            setIsChecked((currentCheckedValue) => !currentCheckedValue);
+            setList((prevList) =>
+              prevList.map((list) => {
+                if (list.id == item.id) {
+                  return {
+                    ...list,
+                    completed: e.target.checked,
+                  };
+                } else {
+                  return list;
+                }
+              })
+            );
           }}
         />
         <span data-list-item-text>{item.value}</span>

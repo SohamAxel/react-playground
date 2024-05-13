@@ -14,11 +14,14 @@ const TodoForm = ({ setList, count }) => {
       />
       <button
         onClick={() => {
+          if (toDoInput === "") return;
+
           setList((prevList) => [
             ...prevList,
             {
-              id: prevList.length,
+              id: crypto.randomUUID(),
               value: toDoInput,
+              completed: false,
             },
           ]);
           setToDoInput("");
