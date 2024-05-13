@@ -9,7 +9,7 @@ const Todo = () => {
     <>
       <ul id="list">
         {lists.map((list, index) => (
-          <List key={index} item={list} setList={setList} />
+          <List key={list.id} item={list} setList={setList} />
         ))}
       </ul>
       <TodoForm setList={setList} />
