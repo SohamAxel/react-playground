@@ -1,8 +1,56 @@
-# React + Vite
+# Forms
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Different form elements
 
-Currently, two official plugins are available:
+**Checkbox**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+controlled input
+
+```JSX
+<input type="checkbox" checked={true} onChange={callback}/>
+```
+
+uncontrolled input
+
+```JSX
+<input type="checkbox" defaultChecked/>
+```
+
+**Textarea/Input**
+controlled
+
+```JSX
+<textarea value="abcdef" onChange={callback} />
+<input value="abcdef" onChange={callback} />
+```
+
+uncontrolled
+
+```JSX
+<textarea defaultValue="abcdef"/>
+<input defaultValue="abcdef"/>
+```
+
+**Select**
+
+controlled
+
+```JSX
+<select value={2} onChange={callback}>
+  <option value={1}>1</option>
+  <option value={2}>2</option>
+  <option value={3}>3</option>
+</select>
+```
+
+uncontrolled
+
+```JSX
+<select defaultValue={2}>
+  <option value={1}>1</option>
+  <option value={2}>2</option>
+  <option value={3}>3</option>
+</select>
+```
+
+_We use uncontrolled input with useRef hook and controlled input with useState hook_
