@@ -2,7 +2,7 @@ import React from "react";
 
 function FormInputElement({ type, label, inputRef, error, handleChange }) {
   return (
-    <div className={`form-group ${!!error && "error"}`}>
+    <div className={`form-group ${!!error ? "error" : ""}`}>
       <label className="label" htmlFor="email">
         {label}
       </label>
