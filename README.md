@@ -99,3 +99,6 @@ console.log(import.meta.env.VITE_URL);
 ```
 
 For the above variables only VITE_URL will return value, PASSWORD will return null.
+
+**Project references**
+https://github.com/WebDevSimplified/React-Simplified-Beginner-Projects/tree/main

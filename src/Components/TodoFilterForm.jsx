@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { TodoContext } from "./TodoMain";
-import { ACTIONS } from "../Actions/todoAction";
 
 const TodoFilterForm = () => {
-  const { dispatch, todos } = useContext(TodoContext);
+  const { updateFilterValue, hideAllCompleted, todos } =
+    useContext(TodoContext);
 
   return (
     <div className="filter-form">
@@ -13,19 +13,14 @@ const TodoFilterForm = () => {
           type="text"
           id="name"
           value={todos.filter}
-          onChange={(e) =>
-            dispatch({
-              type: ACTIONS.TODO_FILTER,
-              payload: { value: e.target.value },
-            })
-          }
+          onChange={(e) => updateFilterValue(e.target.value)}
         />
       </div>
       <label>
         <input
           type="checkbox"
           checked={todos.hideCompleted}
-          onChange={(e) => dispatch({ type: ACTIONS.TODO_HIDE_COMPLETED })}
+          onChange={hideAllCompleted}
         />
         Hide Completed
       </label>

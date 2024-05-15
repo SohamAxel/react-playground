@@ -5,7 +5,14 @@ export const todoReducer = (state, { type, payload }) => {
     case ACTIONS.TODO_ADD:
       return {
         ...state,
-        list: [...state.list, payload.value],
+        list: [
+          ...state.list,
+          {
+            id: crypto.randomUUID(),
+            value: payload.value,
+            completed: false,
+          },
+        ],
       };
     case ACTIONS.TODO_REMOVE:
       const newList = state.list.filter((todo) => todo.id !== payload.value);
@@ -26,7 +33,10 @@ export const todoReducer = (state, { type, payload }) => {
     case ACTIONS.TODO_UPDATE:
       const updatedLists = state.list.map((todo) => {
         if (todo.id === payload.of) {
-          return payload.value;
+          return {
+            ...todo,
+            ...payload.value,
+          };
         }
         return todo;
       });
@@ -35,5 +45,7 @@ export const todoReducer = (state, { type, payload }) => {
         ...state,
         list: updatedLists,
       };
+    default:
+      throw new Error(`No action found for ${type}`);
   }
 };

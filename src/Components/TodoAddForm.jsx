@@ -1,22 +1,15 @@
 import React, { useContext, useState, useRef } from "react";
 import { TodoContext } from "./TodoMain";
-import { ACTIONS } from "../Actions/todoAction";
 
 const TodoAddForm = () => {
-  const { dispatch } = useContext(TodoContext);
+  const { addNewTodo } = useContext(TodoContext);
   const inputRef = useRef();
   // const [todoInput, setTodoInput] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newListItem = {
-      id: crypto.randomUUID(),
-      value: inputRef.current.value,
-      // value: todoInput,
-      completed: false,
-    };
-    console.log(inputRef.current.value);
-    dispatch({ type: ACTIONS.TODO_ADD, payload: { value: newListItem } });
+
+    addNewTodo(inputRef.current.value);
     inputRef.current.value = "";
     // setTodoInput("");
   };
