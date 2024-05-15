@@ -48,3 +48,26 @@ dispatch({ type: ACTIONS.INCREMENT_BY, payload: { value: 5 } })
 ```
 
 _The type and payload attributes in the object is purely personal preferance and the object can have any data which will be need to determine the next state_
+
+## useContext hook
+
+In a scenario where a state is defined in a parent component and the state needs to change way down in a grand child equivant components or multiple components down the nested components, it quickly gets tidious to send the state data into child components as props. It introduces an issue called _prop drilling_ i.e. many in between child components might not need the state data but we have to send it to these components just to pass it to the next child component which needs the state.
+Hence to resolve this issue, we use the function createContext in parent and the hook useContext in child or grandchild.
+
+**createContext**
+This fucntion is used to create the context and pass in the values which will be available to all child components of the parent component which is wrapped by this context.
+
+```JSX
+export const ThemeContext = createContext();
+
+<ThemeContext.Provider value={{ isDarkMode, setDarkMode }}>
+  <ContextChild />
+</ThemeContext.Provider>
+```
+
+**useContext**
+In which ever child component we need the values we just need to use the useContext hook to access the value passed from the parent component
+
+```JSX
+const { isDarkMode, setDarkMode } = useContext(ThemeContext);
+```
