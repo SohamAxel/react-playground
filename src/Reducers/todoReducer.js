@@ -23,19 +23,17 @@ export const todoReducer = (state, { type, payload }) => {
         ...state,
         filter: payload.value,
       };
-    case ACTIONS.TODO_TASK_TOGGLE:
-      const newTasks = state.list.map((todo) => {
-        if (todo.id === payload.value) {
-          return {
-            ...todo,
-            completed: !todo.completed,
-          };
+    case ACTIONS.TODO_UPDATE:
+      const updatedLists = state.list.map((todo) => {
+        if (todo.id === payload.of) {
+          return payload.value;
         }
         return todo;
       });
+
       return {
         ...state,
-        list: newTasks,
+        list: updatedLists,
       };
   }
 };

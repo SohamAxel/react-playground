@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useEffect, useReducer } from "react";
 import TodoFilterForm from "./TodoFilterForm";
 import TodoList from "./TodoList";
 import "../style.css";
@@ -14,7 +14,21 @@ const INITIAL_TODO = {
 };
 
 const TodoMain = () => {
-  const [todos, dispatch] = useReducer(todoReducer, INITIAL_TODO);
+  const [todos, dispatch] = useReducer(
+    todoReducer,
+    INITIAL_TODO,
+    (INITIAL_TODO) => {
+      const localTodos = localStorage.getItem("mytodos");
+      if (localTodos != null) {
+        return JSON.parse(localTodos);
+      }
+      return INITIAL_TODO;
+    }
+  );
+  console.log(todos);
+  useEffect(() => {
+    localStorage.setItem("mytodos", JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <TodoContext.Provider value={{ dispatch, todos }}>
