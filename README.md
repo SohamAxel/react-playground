@@ -71,3 +71,31 @@ In which ever child component we need the values we just need to use the useCont
 ```JSX
 const { isDarkMode, setDarkMode } = useContext(ThemeContext);
 ```
+
+## Derived State
+
+We should not create a state which is derived from another state, as it can introduce unnecassary dependency which might not work. In case we want to update the 2nd state too when the 1st state changes, it will not work with derived state. To resolve this rather than using a new state, manipulate the actual state for the desired output.
+
+## Environment Variables
+
+To store environment variables in vite project we use _.env_ file in the root directory. We can suffic it with development, production to have specific evironment variables for specific instances.
+
+.env.development.local
+.env.production.local
+
+vite adds .local in gitignore so these files will not get pushed in git.
+
+In vite, we need to use **VITE\_** prefix to the envionment variables in order to expose it to our application, else it will not be exposed.
+
+```
+VITE_URL = www.example.com
+PASSWORD = password123
+```
+
+To get env value in app use
+
+```JSX
+console.log(import.meta.env.VITE_URL);
+```
+
+For the above variables only VITE_URL will return value, PASSWORD will return null.
