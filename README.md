@@ -17,6 +17,32 @@ const router = createBrowserRouter([
 
 path defines the url path and the element defines which component to render in that path.
 
+**path**
+path defines the url path where element will be rendered.
+
+**element**
+Defines which component to render in the path
+
+**loader**
+Takes a async function, here we can fetch data from apis or some slow function and pass it as a response, this function will automatically extract the json. We have access to request, param, context in the function.
+
+```JSX
+  { path: ":userId", element: <User />,
+    loader: async ({ request, params }) => {
+      return fetch(`abc.com/${params.userId}`, { signal: request.signal })
+    }
+  },
+```
+
+We can get the data retured by loader in the component defined in element using the _useLoaderData_ hook.
+
+```JSX
+  const userData = useLoaderData()
+```
+
+**children**
+We can nest the paths in order to achieve /team/it/member/1 using the children attribute. This takes an array of path objects
+
 2. Use the router in following way
 
 ```JSX
