@@ -11,6 +11,7 @@ const TeamMemberNav = () => {
       <Link to="/team/pam">Pam</Link>
       {/* In router this component is a child of /team route, hence the following
       link will take user to /team/pam */}
+      <Link to="new">New</Link>
       <Link to="pam">Pam</Link>
       <Link to="jim">Jim</Link>
       <Link to="..">..Route</Link>

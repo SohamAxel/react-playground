@@ -7,6 +7,7 @@ import Navbar from "./Components/Navbar";
 import Team from "./Pages/Team";
 import TeamMember from "./Pages/TeamMember";
 import TeamMemberNav from "./Components/TeamMemberNav";
+import NewTeamMember from "./Pages/NewTeamMember";
 
 const NavbarLayout = () => {
   return (
@@ -36,8 +37,8 @@ const router = createBrowserRouter([
         element: <TeamMemberLayout />,
         children: [
           { index: true, element: <Team /> },
-          { path: "pam", element: <TeamMember name="Pam" /> },
-          { path: "jim", element: <TeamMember name="Jim" /> },
+          { path: ":memberName", element: <TeamMember /> },
+          { path: "new", element: <NewTeamMember /> },
         ],
       },
     ],
