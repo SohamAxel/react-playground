@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import PostCard from "../Components/PostCard";
 import { getUser } from "../apis/getUser";
 import { getTodos } from "../apis/getTodo";
-import { getPostFromUserId } from "../apis/getPost";
+import { getFilteredPost } from "../apis/getPost";
 
 const User = () => {
   const { userDetails, postDetails, todoDetails } = useLoaderData();
@@ -46,7 +46,10 @@ const loader = async ({ params, request }) => {
   const todos = getTodos(params.userId, {
     signal: request.signal,
   });
-  const post = getPostFromUserId(params.userId, { signal: request.signal });
+  const post = getFilteredPost(
+    { signal: request.signal },
+    { userId: params.userId }
+  );
 
   return {
     userDetails: await user,

@@ -1,8 +1,10 @@
-import { Outlet, createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { postListRoute } from "./Pages/Posts";
 import { userListRoute } from "./Pages/Users";
 import { todoListRoute } from "./Pages/Todos";
 import { postRoute } from "./Pages/Post";
+import { newPostRoute } from "./Pages/NewPost";
+import { editPostRoute } from "./Pages/EditPost";
 import { userRoute } from "./Pages/User";
 import ErrorPage from "./Pages/ErrorPage";
 import RootLayout from "./layouts/RootLayout";
@@ -26,8 +28,21 @@ const router = createBrowserRouter([
                 ...postListRoute,
               },
               {
+                path: "new",
+                ...newPostRoute,
+              },
+              {
                 path: ":postId",
-                ...postRoute,
+                children: [
+                  {
+                    index: true,
+                    ...postRoute,
+                  },
+                  {
+                    path: "edit",
+                    ...editPostRoute,
+                  },
+                ],
               },
             ],
           },

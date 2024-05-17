@@ -12,7 +12,14 @@ const Post = () => {
 
   return (
     <>
-      <h1 className="page-title">{title}</h1>
+      <h1 className="page-title">
+        {title}
+        <div className="title-btns">
+          <Link className="btn btn-outline" to={`/posts/${postId}/edit`}>
+            Edit
+          </Link>
+        </div>
+      </h1>
       <span className="page-subtitle">
         By:{" "}
         <Link to={`/users/${userDetails.id.toString()}`}>

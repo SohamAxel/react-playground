@@ -12,8 +12,10 @@ export const getPost = (postId, options) => {
     }
   );
 };
-export const getPostFromUserId = (userId, options) => {
-  return fetch(`http://127.0.0.1:3000/posts?userId=${userId}`, options).then(
+export const getFilteredPost = (options, params) => {
+  const query = new URLSearchParams(params);
+  console.log(`http://127.0.0.1:3000/posts?${query.toString()}`);
+  return fetch(`http://127.0.0.1:3000/posts?${query.toString()}`, options).then(
     (response) => {
       if (response.status == 200) return response.json();
       throw redirect("/posts");
