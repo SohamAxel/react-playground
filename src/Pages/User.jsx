@@ -1,6 +1,9 @@
 import React from "react";
 import { useLoaderData } from "react-router-dom";
 import PostCard from "../Components/PostCard";
+import { getUser } from "../apis/getUser";
+import { getTodos } from "../apis/getTodo";
+import { getPostFromUserId } from "../apis/getPost";
 
 const User = () => {
   const { userDetails, postDetails, todoDetails } = useLoaderData();
@@ -39,46 +42,17 @@ const User = () => {
 };
 
 const loader = async ({ params, request }) => {
-  let userData = {};
-  await fetch(`http://127.0.0.1:3000/users/${params.userId}`, {
+  const user = getUser(params.userId, { signal: request.signal });
+  const todos = getTodos(params.userId, {
     signal: request.signal,
-  })
-    .then((response) => {
-      if (response.status == 200) return response.json();
-      throw redirect("/posts");
-    })
-    .then(async (data) => {
-      userData.userDetails = data;
-    });
-
-  await fetch(`http://127.0.0.1:3000/todos?userId=${params.userId}`, {
-    signal: request.signal,
-  })
-    .then((response) => {
-      if (response.status == 200) return response.json();
-      throw redirect("/posts");
-    })
-    .then(async (data) => {
-      userData.todoDetails = data;
-    });
-
-  await fetch(`http://127.0.0.1:3000/posts?userId=${params.userId}`, {
-    signal: request.signal,
-  })
-    .then((response) => {
-      if (response.status == 200) return response.json();
-      throw redirect("/posts");
-    })
-    .then(async (data) => {
-      userData.postDetails = data;
-    });
-
-  return new Response(JSON.stringify(userData), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json; utf-8",
-    },
   });
+  const post = getPostFromUserId(params.userId, { signal: request.signal });
+
+  return {
+    userDetails: await user,
+    todoDetails: await todos,
+    postDetails: await post,
+  };
 };
 
 export const userRoute = {

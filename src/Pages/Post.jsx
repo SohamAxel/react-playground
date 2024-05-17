@@ -1,6 +1,9 @@
 import React from "react";
 import { Link, useLoaderData, useParams } from "react-router-dom";
 import CommentCard from "../Components/CommentCard";
+import { getPost } from "../apis/getPost";
+import { getComments } from "../apis/getComment";
+import { getUser } from "../apis/getUser";
 
 const Post = () => {
   const { postId } = useParams();
@@ -27,47 +30,27 @@ const Post = () => {
   );
 };
 
-const loader = async ({ params, request }) => {
-  let postData = {};
-  await fetch(`http://127.0.0.1:3000/posts/${params.postId}`, {
-    signal: request.signal,
-  })
-    .then((response) => {
-      if (response.status == 200) return response.json();
-      throw redirect("/posts");
-    })
-    .then(async (data) => {
-      postData.postDetails = data;
-    });
-
-  await fetch(`http://127.0.0.1:3000/comments?postId=${params.postId}`, {
-    signal: request.signal,
-  })
-    .then((response) => {
-      if (response.status == 200) return response.json();
-      throw redirect("/posts");
-    })
-    .then(async (data) => {
-      postData.commentDetails = data;
-    });
-
-  await fetch(`http://127.0.0.1:3000/users/${postData.postDetails.userId}`, {
-    signal: request.signal,
-  })
-    .then((response) => {
-      if (response.status == 200) return response.json();
-      throw redirect("/posts");
-    })
-    .then(async (data) => {
-      postData.userDetails = data;
-    });
-
-  return new Response(JSON.stringify(postData), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json; utf-8",
-    },
-  });
+const loader = async ({ params: { postId }, request: { signal } }) => {
+  const comment = getComments(postId, { signal });
+  const post = await getPost(postId, { signal });
+  const user = getUser(post.userId, { signal });
+  // In this case the comment and post api will be called simultaneously, but the user api will be called only after
+  // post api is resolved.
+  // In return as we know post has already resolved, so we need await for comment and user api call.
+  return {
+    commentDetails: await comment,
+    postDetails: post,
+    userDetails: await user,
+  };
+  // In this case each api call happens one after other which slows down the component loading
+  // const comment = await getComments(postId, { signal });
+  // const post = await getPost(postId, { signal });
+  // const user = await (post.userId, { signal });
+  // return {
+  //   commentDetails: comment,
+  //   postDetails: post,
+  //   userDetails: user,
+  // };
 };
 
 export const postRoute = {

@@ -11,39 +11,44 @@ const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-      { index: true, element: <Navigate to="/posts" /> },
-      { path: "*", element: <ErrorPage /> },
       {
-        path: "/posts",
-        // optional -
-        // element: <Outlet />,
+        errorElement: <ErrorPage />,
         children: [
+          { index: true, element: <Navigate to="/posts" /> },
+          { path: "*", element: <h1>Error not found 404</h1> },
           {
-            index: true,
-            ...postListRoute,
+            path: "/posts",
+            // optional -
+            // element: <Outlet />,
+            children: [
+              {
+                index: true,
+                ...postListRoute,
+              },
+              {
+                path: ":postId",
+                ...postRoute,
+              },
+            ],
           },
           {
-            path: ":postId",
-            ...postRoute,
+            path: "/users",
+            children: [
+              {
+                index: true,
+                ...userListRoute,
+              },
+              {
+                path: ":userId",
+                ...userRoute,
+              },
+            ],
+          },
+          {
+            path: "/todos",
+            ...todoListRoute,
           },
         ],
-      },
-      {
-        path: "/users",
-        children: [
-          {
-            index: true,
-            ...userListRoute,
-          },
-          {
-            path: ":userId",
-            ...userRoute,
-          },
-        ],
-      },
-      {
-        path: "/todos",
-        ...todoListRoute,
       },
     ],
   },

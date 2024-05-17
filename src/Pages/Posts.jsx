@@ -1,6 +1,7 @@
 import React from "react";
 import PostCard from "../Components/PostCard";
 import { useLoaderData } from "react-router";
+import { getPosts } from "../apis/getPost";
 
 const Posts = () => {
   const postData = useLoaderData();
@@ -18,9 +19,7 @@ const Posts = () => {
 };
 
 const loader = ({ request }) => {
-  return fetch("http://127.0.0.1:3000/posts", {
-    signal: request.signal,
-  });
+  return getPosts({ signal: request.signal });
 };
 
 export const postListRoute = {

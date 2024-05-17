@@ -1,6 +1,7 @@
 import React from "react";
 import { useLoaderData } from "react-router-dom";
 import UserCard from "../Components/UserCard";
+import { getUsers } from "../apis/getUser";
 
 const Users = () => {
   const users = useLoaderData();
@@ -17,10 +18,8 @@ const Users = () => {
   );
 };
 
-const loader = ({ request }) => {
-  return fetch("http://127.0.0.1:3000/users", {
-    signal: request.signal,
-  });
+const loader = ({ request: { signal } }) => {
+  return getUsers({ signal });
 };
 
 export const userListRoute = {

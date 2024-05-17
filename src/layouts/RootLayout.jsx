@@ -5,13 +5,16 @@ import MainNavBar from "../Components/MainNavBar";
 
 const RootLayout = () => {
   const { state } = useNavigation();
+  const isLoading = state === "loading";
+
   return (
     <>
       <MainNavBar />
       {/* To restore the scroll a top when page changes */}
       <ScrollRestoration />
-      <div className="container">
-        {state === "loading" ? <Loader /> : <Outlet />}
+      {isLoading && <Loader />}
+      <div className={`container ${isLoading ? "loading" : ""}`}>
+        <Outlet />
       </div>
     </>
   );
