@@ -8,7 +8,7 @@ const Post = () => {
   const { body, id, title, userId } = postDetails;
 
   return (
-    <div className="container">
+    <>
       <h1 className="page-title">{title}</h1>
       <span className="page-subtitle">
         By:{" "}
@@ -23,8 +23,54 @@ const Post = () => {
           <CommentCard key={comment.id} {...comment} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
-export default Post;
+const loader = async ({ params, request }) => {
+  let postData = {};
+  await fetch(`http://127.0.0.1:3000/posts/${params.postId}`, {
+    signal: request.signal,
+  })
+    .then((response) => {
+      if (response.status == 200) return response.json();
+      throw redirect("/posts");
+    })
+    .then(async (data) => {
+      postData.postDetails = data;
+    });
+
+  await fetch(`http://127.0.0.1:3000/comments?postId=${params.postId}`, {
+    signal: request.signal,
+  })
+    .then((response) => {
+      if (response.status == 200) return response.json();
+      throw redirect("/posts");
+    })
+    .then(async (data) => {
+      postData.commentDetails = data;
+    });
+
+  await fetch(`http://127.0.0.1:3000/users/${postData.postDetails.userId}`, {
+    signal: request.signal,
+  })
+    .then((response) => {
+      if (response.status == 200) return response.json();
+      throw redirect("/posts");
+    })
+    .then(async (data) => {
+      postData.userDetails = data;
+    });
+
+  return new Response(JSON.stringify(postData), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json; utf-8",
+    },
+  });
+};
+
+export const postRoute = {
+  element: <Post />,
+  loader,
+};

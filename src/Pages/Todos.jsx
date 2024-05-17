@@ -4,7 +4,7 @@ import { useLoaderData } from "react-router-dom";
 const Todos = () => {
   const todos = useLoaderData();
   return (
-    <div className="container">
+    <>
       <h1 className="page-title">Todos</h1>
       <ul>
         {todos.map((todo) => (
@@ -13,8 +13,17 @@ const Todos = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 
-export default Todos;
+const loader = ({ request }) => {
+  return fetch("http://127.0.0.1:3000/todos", {
+    signal: request.signal,
+  });
+};
+
+export const todoListRoute = {
+  element: <Todos />,
+  loader,
+};

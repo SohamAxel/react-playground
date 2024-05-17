@@ -6,15 +6,24 @@ const Users = () => {
   const users = useLoaderData();
 
   return (
-    <div className="container">
+    <>
       <h1 className="page-title">Users</h1>
       <div className="card-grid">
         {users.map((user) => (
           <UserCard key={user.id} {...user} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
-export default Users;
+const loader = ({ request }) => {
+  return fetch("http://127.0.0.1:3000/users", {
+    signal: request.signal,
+  });
+};
+
+export const userListRoute = {
+  element: <Users />,
+  loader,
+};

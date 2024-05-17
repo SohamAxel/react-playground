@@ -7,7 +7,7 @@ const User = () => {
   const { id, name, email, company, website, address } = userDetails;
 
   return (
-    <div className="container">
+    <>
       <h1 className="page-title">{name}</h1>
       <div className="page-subtitle">{email}</div>
       <div>
@@ -34,8 +34,54 @@ const User = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 
-export default User;
+const loader = async ({ params, request }) => {
+  let userData = {};
+  await fetch(`http://127.0.0.1:3000/users/${params.userId}`, {
+    signal: request.signal,
+  })
+    .then((response) => {
+      if (response.status == 200) return response.json();
+      throw redirect("/posts");
+    })
+    .then(async (data) => {
+      userData.userDetails = data;
+    });
+
+  await fetch(`http://127.0.0.1:3000/todos?userId=${params.userId}`, {
+    signal: request.signal,
+  })
+    .then((response) => {
+      if (response.status == 200) return response.json();
+      throw redirect("/posts");
+    })
+    .then(async (data) => {
+      userData.todoDetails = data;
+    });
+
+  await fetch(`http://127.0.0.1:3000/posts?userId=${params.userId}`, {
+    signal: request.signal,
+  })
+    .then((response) => {
+      if (response.status == 200) return response.json();
+      throw redirect("/posts");
+    })
+    .then(async (data) => {
+      userData.postDetails = data;
+    });
+
+  return new Response(JSON.stringify(userData), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json; utf-8",
+    },
+  });
+};
+
+export const userRoute = {
+  element: <User />,
+  loader,
+};
