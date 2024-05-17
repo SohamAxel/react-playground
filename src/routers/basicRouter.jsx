@@ -1,13 +1,13 @@
 import React from "react";
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import Home from "./Pages/Home";
-import About from "./Pages/About";
-import Store from "./Pages/Store";
-import Navbar from "./Components/Navbar";
-import Team from "./Pages/Team";
-import TeamMember from "./Pages/TeamMember";
-import TeamMemberNav from "./Components/TeamMemberNav";
-import NewTeamMember from "./Pages/NewTeamMember";
+import Home from "../Pages/Home";
+import About from "../Pages/About";
+import Store from "../Pages/Store";
+import Navbar from "../Components/Navbar";
+import Team from "../Pages/Team";
+import TeamMember from "../Pages/TeamMember";
+import TeamMemberNav from "../Components/TeamMemberNav";
+import NewTeamMember from "../Pages/NewTeamMember";
 
 const NavbarLayout = () => {
   return (
@@ -25,7 +25,7 @@ const TeamMemberLayout = () => {
     </>
   );
 };
-const router = createBrowserRouter([
+const basicRouter = createBrowserRouter([
   {
     element: <NavbarLayout />,
     children: [
@@ -45,4 +45,4 @@ const router = createBrowserRouter([
   },
 ]);
 
-export default router;
+export default basicRouter;

@@ -51,7 +51,9 @@ We can nest the paths in order to achieve /team/it/member/1 using the children a
 
 All the components inside this route will have access to route related element to implement different routing functionalities.
 
-**Link**
+## React router components
+
+**<Link />**
 One such element is Link which we need to use to utilize the client routing.
 
 ```JSX
@@ -101,4 +103,56 @@ const router = createBrowserRouter([
 
 ```JSX
 <Link to=".." relative="path">..Route</Link>
+```
+
+**<FORM />**
+
+This component works somewhat similar to form element, when ever the form is submitter the loader/action function is called again and does not refresh the page. It also allows different methods other than get and post, like patch, delete.
+
+## Useful Hooks with react router
+
+### useNavigate
+
+### useNavigation
+
+This hook provides us the current state of the loader/action. The state can be idle, loading or submitting. using these states we can show loader components in the main component.
+
+```JSX
+const { state } = useNavigation();
+```
+
+### useLoaderData
+
+This hook is used to get all the data that is returned from loader method in path definition. This is useful for
+loading data in the component.
+
+```JSX
+loader: async ({ request: { signal, url } }) => {
+  const searchParams = new URL(url).searchParams;
+  const query = searchParams.get("query") ?? "";
+  return {
+    query: query,
+    todos: await fetch(`http://127.0.0.1:3000/todos?q=${query}`, {
+      signal,
+    }).then((res) => res.json()),
+  };
+},
+
+const { query, todos } = useLoaderData();
+```
+
+### useActionData
+
+This hook is used to get all the data that is returned from action method in path definition. This can be useful to track errors in the form.
+
+```JSX
+action: async ({ request }) => {
+  const formData = await request.formData();
+  const getTitle = formData.get("title")
+  if (getTitle === "") {
+    return "Title is required";
+  }
+}
+
+const messageError = useActionData();
 ```
