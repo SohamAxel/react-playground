@@ -9,7 +9,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { createPost } from "../apis/updatePost";
-import PostForm from "../Components/PostForm";
+import PostForm, { postFromValidator } from "../Components/PostForm";
 
 export const NewPost = () => {
   const { users } = useLoaderData();
@@ -35,17 +35,14 @@ const loader = async ({ request: { signal, url } }) => {
 const action = async ({ request }) => {
   const formData = await request.formData();
   const title = formData.get("title");
-
-  if (title === "") {
-    return {
-      titleError: {
-        error: true,
-        message: "Required",
-      },
-    };
-  }
   const body = formData.get("body");
   const userId = formData.get("userId");
+
+  const errors = postFromValidator({ title, body, userId });
+
+  if (Object.keys.length > 0) {
+    return errors;
+  }
 
   const response = await createPost(
     { title, body, userId },

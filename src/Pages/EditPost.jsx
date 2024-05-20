@@ -7,7 +7,7 @@ import {
 import { getPost } from "../apis/getPost";
 import { getUsers } from "../apis/getUser";
 import { updatePost } from "../apis/updatePost";
-import PostForm from "../Components/PostForm";
+import PostForm, { postFromValidator } from "../Components/PostForm";
 
 const EditPost = () => {
   const { users, post } = useLoaderData();
@@ -36,17 +36,14 @@ const loader = async ({ request: { signal }, params: { postId } }) => {
 const action = async ({ request, params: { postId } }) => {
   const formData = await request.formData();
   const title = formData.get("title");
-
-  if (title === "") {
-    return {
-      titleError: {
-        error: true,
-        message: "Required",
-      },
-    };
-  }
   const body = formData.get("body");
   const userId = formData.get("userId");
+
+  const errors = postFromValidator({ title, body, userId });
+
+  if (Object.keys.length > 0) {
+    return errors;
+  }
 
   const response = await updatePost(
     postId,
