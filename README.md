@@ -1,8 +1,10 @@
-# React + Vite
+# Advanced React Concepts
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Portals
 
-Currently, two official plugins are available:
+We can create portal elements in components which can be appended to any part of the DOM using a query selector. In general and event listner in child component bubbles up to the html through its parents, how ever while using portals it will bubble upto the parent element present in the component this portal is added.
+Example in PortalComponent.jsx file
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## forward Ref
+
+If we pass a ref (using useRef()) to a custom component as props this will not work. In order to make it work we need to wrap the custom component in a function provided by react called forwardRef
