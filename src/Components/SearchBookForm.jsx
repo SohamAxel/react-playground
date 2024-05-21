@@ -6,7 +6,7 @@ const SearchBookForm = () => {
   const searchBy = searchByOptions;
 
   return (
-    <Form>
+    <Form action="/books/search">
       <select name="search-by" id="search-by">
         {searchBy.map((item) => (
           <option key={item.name} value={item.name}>

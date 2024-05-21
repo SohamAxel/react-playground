@@ -4,10 +4,12 @@ import RootNav from "../Components/RootNav";
 
 const RootLayout = () => {
   return (
-    <>
+    <div className="container m-auto">
       <RootNav />
-      <Outlet />
-    </>
+      <div className="border-solid border-gray-400 border-2 rounded-md">
+        <Outlet />
+      </div>
+    </div>
   );
 };
 

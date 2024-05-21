@@ -4,8 +4,8 @@ import SearchBookForm from "./SearchBookForm";
 
 const RootNav = () => {
   return (
-    <nav>
-      <ul>
+    <nav className="">
+      <ul className="flex justify-evenly">
         <li>
           <Link to="/">
             <img

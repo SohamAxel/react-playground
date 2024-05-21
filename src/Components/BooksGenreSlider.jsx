@@ -3,7 +3,13 @@ import BookCard from "../Components/BookCard";
 import { getBooksBySubject } from "../apis/getBooks";
 import Slider from "react-slick";
 
-const BooksGenreSlider = ({ initialBooks, subject, fields, limit }) => {
+const BooksGenreSlider = ({
+  initialBooks,
+  subject,
+  fields,
+  limit,
+  heading,
+}) => {
   const [booksData, setBooksData] = useState(initialBooks);
   const [isDataLoading, setDataLoading] = useState(false);
   const noMoreData = useRef(initialBooks.length < limit);
@@ -11,8 +17,8 @@ const BooksGenreSlider = ({ initialBooks, subject, fields, limit }) => {
   const settings = {
     autoplay: false,
     infinite: false,
-    slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToShow: 5,
+    slidesToScroll: 1,
   };
 
   const fetchData = async () => {
@@ -38,22 +44,31 @@ const BooksGenreSlider = ({ initialBooks, subject, fields, limit }) => {
   return (
     <>
       <section>
-        <Slider {...settings}>
-          {booksData.map((book) => (
-            <BookCard
-              key={book.cover_id}
-              id={book.cover_id}
-              title={book.title}
-            />
-          ))}
-          {noMoreData.current ? undefined : (
-            <div>
-              <button onClick={handleClick} disabled={isDataLoading}>
-                {isDataLoading ? "Loading ..." : "Load More ..."}
-              </button>
-            </div>
-          )}
-        </Slider>
+        <div id="slider-head" className="p-5">
+          <h1 className="font-bold text-lg">{heading}</h1>
+        </div>
+        <div className="bg-slider pl-12 pr-12">
+          <Slider {...settings}>
+            {booksData.map((book) => {
+              console.log(book.availability?.is_readable);
+              return (
+                <BookCard
+                  key={book.cover_id}
+                  id={book.cover_id}
+                  title={book.title}
+                  is_readable={book.availability?.is_readable ? true : false}
+                />
+              );
+            })}
+            {noMoreData.current ? undefined : (
+              <div>
+                <button onClick={handleClick} disabled={isDataLoading}>
+                  {isDataLoading ? "Loading ..." : "Load More ..."}
+                </button>
+              </div>
+            )}
+          </Slider>
+        </div>
       </section>
     </>
   );

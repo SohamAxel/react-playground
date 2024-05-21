@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.slick-prev:before,
+.slick-next:before {
+  color: hsl(202, 96%, 37%);
+  font-size: 35px;
+}
+
+.slick-list {
+  padding: 2rem;
+}
+
+.bg-slider {
+  background-color: #f3edd7;
+}

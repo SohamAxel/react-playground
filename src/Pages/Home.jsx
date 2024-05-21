@@ -4,41 +4,34 @@ import { getBooksBySubject } from "../apis/getBooks";
 import BooksGenreSlider from "../Components/BooksGenreSlider";
 
 const Home = () => {
-  const { param, crimeData, loveData, kidData } = useLoaderData();
+  const { param, crimeData, loveData, thrillerData } = useLoaderData();
 
   return (
     <>
-      <div>
-        <h1>Crime and Thriller</h1>
-        <BooksGenreSlider
-          {...param}
-          subject="crime"
-          initialBooks={crimeData.works}
-        />
-      </div>
-      <div>
-        <h1>Romance</h1>
-        <BooksGenreSlider
-          {...param}
-          subject="love"
-          initialBooks={loveData.works}
-        />
-      </div>
-      <div>
-        <h1>Kids</h1>
-        <BooksGenreSlider
-          {...param}
-          subject="kid"
-          initialBooks={kidData.works}
-        />
-      </div>
+      <BooksGenreSlider
+        {...param}
+        subject="crime"
+        initialBooks={crimeData.works}
+        heading="Crime"
+      />
+      <BooksGenreSlider
+        {...param}
+        subject="love"
+        initialBooks={loveData.works}
+        heading="Romance"
+      />
+      <BooksGenreSlider
+        {...param}
+        subject="thriller"
+        initialBooks={thrillerData.works}
+        heading="Thrillers"
+      />
     </>
   );
 };
 const loader = async () => {
   const offset = 0;
-  const limit = 5;
-  const subject = "crime";
+  const limit = 12;
   const fields = "key,title,author_name,editions,cover_i";
   return {
     param: {
@@ -55,7 +48,7 @@ const loader = async () => {
       offset,
       limit,
     }),
-    kidData: await getBooksBySubject("kid", {
+    thrillerData: await getBooksBySubject("thriller", {
       fields,
       offset,
       limit,
