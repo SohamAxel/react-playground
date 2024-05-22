@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CustomDatePickerCalendar from "./CustomDatePickerCalendar";
-import { getTime, fromUnixTime, format } from "date-fns";
+import { getTime, format } from "date-fns";
 
 const CustomDatePicker = () => {
   const [timestamp, setTimestamp] = useState(

@@ -40,3 +40,31 @@ Even though we are unloading one counter and rendering other React virtual dom w
 <Counter key="dogs">
 <Counter key="cats">
 ```
+
+# Advanced Hooks
+
+## useLayoutEffect
+
+The useEffect hook runs only after the initial component is renderer. UseLayoutEffect runs before the component is rendered. This hook runs all the changes synchronously before rendering the element and hence should not be used to perform complex or slow action unless absolutely necessary. For slow, async function useEffect hook must be used.
+
+## useId
+
+This hook returns unique id to use in diffent html element ids. If we need to use id for multiple element use prefix string rather than calling a new useId hook
+
+```JSX
+const id = useId();
+<div id={`${id}-first`}></div>
+<div id={`${id}-second`}></div>
+```
+
+## useImperativeHandle
+
+useImperativeHandle hook can be used to alter the ref that is passed down from parent, it can be used to just expose certain part of an element rather than the full element, or may be target 2 element in the single ref. Not recommeded unless absolutely necessary.
+
+## useCallback as Ref
+
+We can add functions in the ref attribute of an html element. This function will get called in 3 scenarios
+
+1. When element having the ref mounts. (Example in CallbackRef.jsx)
+1. When element having the ref unmounts. (Example in CallbackRef.jsx)
+1. When element having the ref changes. (Example in CallbackRefElementChanges.jsx)
