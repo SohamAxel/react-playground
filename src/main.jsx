@@ -1,9 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import MyErrorBoundary from "./Components/MyErrorBoundary.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <MyErrorBoundary fallback={<div>My Error Boundary</div>}>
+      <App />
+    </MyErrorBoundary>
   </React.StrictMode>
 );
