@@ -19,7 +19,7 @@ const CustomDatePicker = () => {
       {showPicker && (
         <CustomDatePickerCalendar
           timestamp={timestamp}
-          key={timestamp}
+          // key={timestamp}
           setTimestamp={setTimestamp}
         />
       )}
