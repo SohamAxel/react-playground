@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import EventFormGroup from "./EventFormGroup";
 import { Color, Event, getCalendarEventContext } from "./Calendar";
 
@@ -16,9 +16,11 @@ type EventData = {
 const AddEventForm = ({
   date,
   hideModal,
+  event,
 }: {
   date: string;
   hideModal: () => void;
+  event?: Event;
 }) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const [isAllDayChecked, setAllDayChecked] = useState(false);
@@ -30,7 +32,25 @@ const AddEventForm = ({
     allDay: "",
     color: "",
   });
-  const { addNewEvent } = getCalendarEventContext();
+  const { addNewEvent, editEvent } = getCalendarEventContext();
+
+  useEffect(() => {
+    console.log(event);
+    if (event) {
+      setAllDayChecked(event.allDay);
+      if (nameRef.current) {
+        nameRef.current.value = event.name;
+      }
+      if (!event.allDay) {
+        if (startTimeRef.current) {
+          startTimeRef.current.value = event.startTime;
+        }
+        if (endTimeRef.current) {
+          endTimeRef.current.value = event.endTime;
+        }
+      }
+    }
+  }, []);
 
   const handleChangeColor = (color: Color) => {
     colorRef.current = color;
@@ -63,9 +83,16 @@ const AddEventForm = ({
         color: colorRef.current ? colorRef.current : "blue",
         allDay: isAllDayChecked,
         startTime: isAllDayChecked ? null : startTimeRef.current?.value,
-        endTime: isAllDayChecked ? null : startTimeRef.current?.value,
+        endTime: isAllDayChecked ? null : endTimeRef.current?.value,
       };
-      addNewEvent(date, newEvent);
+      if (event) {
+        editEvent(date, {
+          ...newEvent,
+          id: event.id,
+        });
+      } else {
+        addNewEvent(date, newEvent);
+      }
       hideModal();
     }
   };

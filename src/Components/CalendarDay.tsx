@@ -1,7 +1,7 @@
 import { format, isToday } from "date-fns";
 import AddEventForm from "./AddEventForm";
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Event, getCalendarEventContext } from "./Calendar";
 
 type CalendarDay = {
@@ -12,18 +12,29 @@ type CalendarDay = {
 type AddEventModalForm = {
   hideModal: () => void;
   date: Date;
+  event?: Event;
 };
 
 const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
   const [showAddEventForm, setShowAddEventForm] = useState(false);
+  const [showEditEventForm, setShowEditEventForm] = useState(false);
   const day = date.getDate();
   const { events } = getCalendarEventContext();
+  const eventData = useRef<Event>();
   const thisDayEvents = events.find(
     (event) => event.date === date.toDateString()
   );
 
   const hideModal = () => {
     setShowAddEventForm(false);
+    eventData.current = undefined;
+  };
+
+  const handleEventEdit = (id: React.Key) => {
+    if (thisDayEvents != undefined) {
+      eventData.current = thisDayEvents.event.find((event) => event.id == id);
+      setShowAddEventForm(true);
+    }
   };
 
   return (
@@ -49,6 +60,7 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
                   <button
                     key={event.id}
                     className={`all-day-event ${event.color} event`}
+                    onClick={() => handleEventEdit(event.id)}
                   >
                     <div className="event-name">{event.name}</div>
                   </button>
@@ -59,7 +71,11 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
           : thisDayEvents.event.map((event) => {
               if (!event.allDay) {
                 return (
-                  <button key={event.id} className="event">
+                  <button
+                    key={event.id}
+                    className="event"
+                    onClick={() => handleEventEdit(event.id)}
+                  >
                     <div className={`color-dot ${event.color}`}></div>
                     <div className="event-time">{event.startTime}</div>
                     <div className="event-name">{event.name}</div>
@@ -69,13 +85,19 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
             })}
       </div>
       {showAddEventForm && (
-        <AddEventModalForm hideModal={hideModal} date={date} />
+        <AddEventModalForm
+          hideModal={hideModal}
+          date={date}
+          event={
+            eventData.current !== undefined ? eventData.current : undefined
+          }
+        />
       )}
     </>
   );
 };
 
-const AddEventModalForm = ({ hideModal, date }: AddEventModalForm) => {
+const AddEventModalForm = ({ hideModal, date, event }: AddEventModalForm) => {
   const modalsElement = document.querySelector("#root");
   return modalsElement
     ? createPortal(
@@ -89,7 +111,11 @@ const AddEventModalForm = ({ hideModal, date }: AddEventModalForm) => {
                 &times;
               </button>
             </div>
-            <AddEventForm date={date.toDateString()} hideModal={hideModal} />
+            <AddEventForm
+              date={date.toDateString()}
+              hideModal={hideModal}
+              event={event}
+            />
           </div>
         </div>,
         modalsElement

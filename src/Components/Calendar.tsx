@@ -37,6 +37,7 @@ export type Events = {
 type CalendarEventContext = {
   events: Events[];
   addNewEvent: (date: string, event: Event) => void;
+  editEvent: (date: string, toUpdateEvent: Event) => void;
 };
 
 const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -78,6 +79,26 @@ const Calendar = () => {
       });
     });
   };
+
+  const editEvent = (date: String, toUpdateEvent: Event) => {
+    setEvents((oldEvents) => {
+      return oldEvents.map((event) => {
+        if (event.date == date) {
+          let updatedEvents = event.event.map((eventItem) => {
+            if (eventItem.id == toUpdateEvent.id) {
+              return toUpdateEvent;
+            }
+            return eventItem;
+          });
+          return {
+            ...event,
+            event: updatedEvents,
+          };
+        }
+        return event;
+      });
+    });
+  };
   const goToNextMonth = () => {
     setVisibleMonth((currentMonth) => addMonths(currentMonth, +1));
   };
@@ -98,7 +119,9 @@ const Calendar = () => {
         goToCurrentMonth={goToCurrentMonth}
       />
       <div className="days">
-        <CalendarEventContext.Provider value={{ events, addNewEvent }}>
+        <CalendarEventContext.Provider
+          value={{ events, addNewEvent, editEvent }}
+        >
           {visibleDates.map((date, index) => {
             return (
               <div
