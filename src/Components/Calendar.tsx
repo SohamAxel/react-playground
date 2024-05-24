@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import CalendarHeader from "./CalendarHeader";
 import {
   addMonths,
@@ -12,38 +12,72 @@ import {
   startOfWeek,
 } from "date-fns";
 import CalendarDay from "./CalendarDay";
-import AddEventForm, { Color } from "./AddEventForm";
-import { createPortal } from "react-dom";
 
-type Events = {
+export type Color = "red" | "blue" | "green";
+
+export type Event = {
   id: React.Key;
-  date: Date;
-  event: {
-    id: React.Key;
-    name: string;
-    color: Color;
-  } & (
-    | { allDay: true }
-    | {
-        allDay: false;
-        startTime: number;
-        endTime: number;
-      }
-  );
+  name: string;
+  color: Color;
+} & (
+  | { allDay: true }
+  | {
+      allDay: false;
+      startTime?: null | string;
+      endTime?: null | string;
+    }
+);
+
+export type Events = {
+  id: React.Key;
+  date: string;
+  event: Event[];
+};
+
+type CalendarEventContext = {
+  events: Events[];
+  addNewEvent: (date: string, event: Event) => void;
 };
 
 const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+const CalendarEventContext = createContext<CalendarEventContext | null>(null);
+
+export const getCalendarEventContext = () => {
+  const calendarEventContext = useContext(CalendarEventContext);
+  if (calendarEventContext === null) {
+    throw Error("Users are null");
+  }
+
+  return calendarEventContext;
+};
 
 const Calendar = () => {
   const [visibleMonth, setVisibleMonth] = useState(new Date());
   const [events, setEvents] = useState<Events[]>([]);
   const today = new Date();
-
+  console.log(events);
   const visibleDates = eachDayOfInterval({
     start: startOfWeek(startOfMonth(visibleMonth)),
     end: endOfWeek(endOfMonth(visibleMonth)),
   });
-
+  const addNewEvent = (date: string, newEvent: Event) => {
+    setEvents((oldEvents) => {
+      let isObjectPresent = oldEvents.find((event) => event.date == date);
+      if (isObjectPresent === undefined) {
+        return [
+          ...oldEvents,
+          { id: crypto.randomUUID(), date, event: [newEvent] },
+        ];
+      }
+      return oldEvents.map((event) => {
+        if (event.date === date) {
+          event.event = [...event.event, newEvent];
+        }
+        return event;
+      });
+    });
+  };
   const goToNextMonth = () => {
     setVisibleMonth((currentMonth) => addMonths(currentMonth, +1));
   };
@@ -64,25 +98,27 @@ const Calendar = () => {
         goToCurrentMonth={goToCurrentMonth}
       />
       <div className="days">
-        {visibleDates.map((date, index) => {
-          return (
-            <div
-              key={date.toDateString()}
-              className={`day ${
-                isSameMonth(date, visibleMonth) ? undefined : "non-month-day"
-              } ${
-                isAfter(date, today) || isSameDay(date, today)
-                  ? undefined
-                  : "old-month-day"
-              }`}
-            >
-              <CalendarDay
-                date={date}
-                weekHeader={index < 8 ? weekDays[index] : undefined}
-              />
-            </div>
-          );
-        })}
+        <CalendarEventContext.Provider value={{ events, addNewEvent }}>
+          {visibleDates.map((date, index) => {
+            return (
+              <div
+                key={date.toDateString()}
+                className={`day ${
+                  isSameMonth(date, visibleMonth) ? undefined : "non-month-day"
+                } ${
+                  isAfter(date, today) || isSameDay(date, today)
+                    ? undefined
+                    : "old-month-day"
+                }`}
+              >
+                <CalendarDay
+                  date={date}
+                  weekHeader={index < 8 ? weekDays[index] : undefined}
+                />
+              </div>
+            );
+          })}
+        </CalendarEventContext.Provider>
       </div>
     </div>
   );

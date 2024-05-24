@@ -2,6 +2,7 @@ import { format, isToday } from "date-fns";
 import AddEventForm from "./AddEventForm";
 import { createPortal } from "react-dom";
 import { useState } from "react";
+import { Event, getCalendarEventContext } from "./Calendar";
 
 type CalendarDay = {
   date: Date;
@@ -16,6 +17,10 @@ type AddEventModalForm = {
 const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
   const [showAddEventForm, setShowAddEventForm] = useState(false);
   const day = date.getDate();
+  const { events } = getCalendarEventContext();
+  const thisDayEvents = events.find(
+    (event) => event.date === date.toDateString()
+  );
 
   const hideModal = () => {
     setShowAddEventForm(false);
@@ -36,19 +41,32 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
         </button>
       </div>
       <div className="events">
-        {/* <button className="all-day-event blue event">
-          <div className="event-name">Short</div>
-        </button>
-        <button className="all-day-event green event">
-          <div className="event-name">
-            Long Event Name That Just Keeps Going
-          </div>
-        </button>
-        <button className="event">
-          <div className="color-dot blue"></div>
-          <div className="event-time">7am</div>
-          <div className="event-name">Event Name</div>
-        </button> */}
+        {thisDayEvents === undefined
+          ? undefined
+          : thisDayEvents.event.map((event) => {
+              if (event.allDay)
+                return (
+                  <button
+                    key={event.id}
+                    className={`all-day-event ${event.color} event`}
+                  >
+                    <div className="event-name">{event.name}</div>
+                  </button>
+                );
+            })}
+        {thisDayEvents === undefined
+          ? undefined
+          : thisDayEvents.event.map((event) => {
+              if (!event.allDay) {
+                return (
+                  <button key={event.id} className="event">
+                    <div className={`color-dot ${event.color}`}></div>
+                    <div className="event-time">{event.startTime}</div>
+                    <div className="event-name">{event.name}</div>
+                  </button>
+                );
+              }
+            })}
       </div>
       {showAddEventForm && (
         <AddEventModalForm hideModal={hideModal} date={date} />
@@ -71,7 +89,7 @@ const AddEventModalForm = ({ hideModal, date }: AddEventModalForm) => {
                 &times;
               </button>
             </div>
-            <AddEventForm />
+            <AddEventForm date={date.toDateString()} hideModal={hideModal} />
           </div>
         </div>,
         modalsElement

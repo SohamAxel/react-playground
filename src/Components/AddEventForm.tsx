@@ -1,7 +1,6 @@
 import { FormEvent, useRef, useState } from "react";
 import EventFormGroup from "./EventFormGroup";
-
-export type Color = "red" | "blue" | "green";
+import { Color, Event, getCalendarEventContext } from "./Calendar";
 
 type FormErrors = {
   name?: string;
@@ -9,15 +8,18 @@ type FormErrors = {
   color?: string;
 };
 
-type Event = {
+type EventData = {
   name?: string;
   color?: string;
-  allDay?: boolean;
-  startTime?: string;
-  endTime?: string;
 };
 
-const AddEventForm = () => {
+const AddEventForm = ({
+  date,
+  hideModal,
+}: {
+  date: string;
+  hideModal: () => void;
+}) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const [isAllDayChecked, setAllDayChecked] = useState(false);
   const colorRef = useRef<Color>();
@@ -28,12 +30,13 @@ const AddEventForm = () => {
     allDay: "",
     color: "",
   });
+  const { addNewEvent } = getCalendarEventContext();
 
   const handleChangeColor = (color: Color) => {
     colorRef.current = color;
   };
 
-  const validateForm = (event: Event) => {
+  const validateForm = (event: EventData) => {
     let error: FormErrors = {};
     if (event.name === "") {
       error.name = "Required";
@@ -46,18 +49,24 @@ const AddEventForm = () => {
   };
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newEvent: Event = {
+    const eventData: EventData = {
       name: nameRef.current?.value,
       color: colorRef.current,
-      allDay: isAllDayChecked,
-      startTime: startTimeRef.current?.value,
-      endTime: endTimeRef.current?.value,
     };
-    const error = validateForm(newEvent);
+    const error = validateForm(eventData);
     if (Object.keys(error).length != 0) {
       setFormErrors(error);
     } else {
-      console.log(newEvent);
+      let newEvent: Event = {
+        id: crypto.randomUUID(),
+        name: nameRef.current ? nameRef.current.value : "",
+        color: colorRef.current ? colorRef.current : "blue",
+        allDay: isAllDayChecked,
+        startTime: isAllDayChecked ? null : startTimeRef.current?.value,
+        endTime: isAllDayChecked ? null : startTimeRef.current?.value,
+      };
+      addNewEvent(date, newEvent);
+      hideModal();
     }
   };
 
