@@ -1,4 +1,5 @@
 import Child from "./Components/Child";
+import ChildReducerExample from "./Components/ChildReducerExample";
 import CustomButton from "./Components/CustomButton";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
       <Child name="John" age={20}>
         <p>John is 20Yr's old</p>
         <CustomButton>My Button</CustomButton>
+        <ChildReducerExample />
       </Child>
     </>
   );

@@ -56,3 +56,46 @@ If we want to update the ref value we need to define it with generic such as
 const value = useRef<number>();
 value.current = 10; \\ Will work
 ```
+
+## Reducer
+
+Works same way as others. Few notes -
+
+1. Always define a default in the switch case which returns the state
+2. To create type of action use followning:
+
+```JSX
+type Action =
+  | {
+      type: "INCREMENT";
+      increaseBy: number;
+    }
+  | {
+      type: "DECREMENT";
+      decreaseBy: number;
+    };
+```
+
+This means action can be either of 2 types and each type will have seperate property for action
+
+## Context types
+
+By default createContext function expects an argument which defines the default context. If we don't want to pass any default context use null.
+And we need to declare the type as following
+
+```JSX
+export const Context = createContext<ContextType | null>(null);
+```
+
+We will face an error while using this context in child component as it can be null. To fix that we can just do a null check like following
+
+```JSX
+export const getUserContext = () => {
+  const userContext = useContext(Context);
+  if (userContext === null) {
+    throw Error("Users are null");
+  }
+
+  return userContext;
+};
+```
