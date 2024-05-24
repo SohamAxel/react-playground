@@ -99,3 +99,7 @@ export const getUserContext = () => {
   return userContext;
 };
 ```
+
+## Generic type
+
+Refer to examples in ChildGenericExample.tsx
