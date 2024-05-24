@@ -16,14 +16,16 @@ type EventData = {
 const AddEventForm = ({
   date,
   hideModal,
-  event,
+  editEventData,
 }: {
   date: string;
   hideModal: () => void;
-  event?: Event;
+  editEventData?: Event;
 }) => {
   const nameRef = useRef<HTMLInputElement>(null);
-  const [isAllDayChecked, setAllDayChecked] = useState(false);
+  const [isAllDayChecked, setAllDayChecked] = useState(
+    editEventData?.allDay ?? false
+  );
   const colorRef = useRef<Color>();
   const startTimeRef = useRef<HTMLInputElement>(null);
   const endTimeRef = useRef<HTMLInputElement>(null);
@@ -33,24 +35,6 @@ const AddEventForm = ({
     color: "",
   });
   const { addNewEvent, editEvent } = getCalendarEventContext();
-
-  useEffect(() => {
-    console.log(event);
-    if (event) {
-      setAllDayChecked(event.allDay);
-      if (nameRef.current) {
-        nameRef.current.value = event.name;
-      }
-      if (!event.allDay) {
-        if (startTimeRef.current) {
-          startTimeRef.current.value = event.startTime;
-        }
-        if (endTimeRef.current) {
-          endTimeRef.current.value = event.endTime;
-        }
-      }
-    }
-  }, []);
 
   const handleChangeColor = (color: Color) => {
     colorRef.current = color;
@@ -82,13 +66,13 @@ const AddEventForm = ({
         name: nameRef.current ? nameRef.current.value : "",
         color: colorRef.current ? colorRef.current : "blue",
         allDay: isAllDayChecked,
-        startTime: isAllDayChecked ? null : startTimeRef.current?.value,
-        endTime: isAllDayChecked ? null : endTimeRef.current?.value,
+        startTime: isAllDayChecked ? "" : startTimeRef.current?.value,
+        endTime: isAllDayChecked ? "" : endTimeRef.current?.value,
       };
-      if (event) {
+      if (editEventData) {
         editEvent(date, {
           ...newEvent,
-          id: event.id,
+          id: editEventData.id,
         });
       } else {
         addNewEvent(date, newEvent);
@@ -101,7 +85,13 @@ const AddEventForm = ({
     <form onSubmit={handleFormSubmit}>
       <EventFormGroup>
         <label htmlFor="name">Name</label>
-        <input type="text" name="name" id="name" ref={nameRef} />
+        <input
+          type="text"
+          name="name"
+          id="name"
+          ref={nameRef}
+          defaultValue={editEventData ? editEventData.name : ""}
+        />
         {formErrors.name && <p>{formErrors.name}</p>}
       </EventFormGroup>
       <EventFormGroup checkbox>
@@ -123,6 +113,11 @@ const AddEventForm = ({
             id="start-time"
             disabled={isAllDayChecked}
             ref={startTimeRef}
+            defaultValue={
+              editEventData && !editEventData.allDay
+                ? editEventData.startTime
+                : ""
+            }
           />
         </EventFormGroup>
         <EventFormGroup>
@@ -133,6 +128,11 @@ const AddEventForm = ({
             id="end-time"
             disabled={isAllDayChecked}
             ref={endTimeRef}
+            defaultValue={
+              editEventData && !editEventData.allDay
+                ? editEventData.endTime
+                : ""
+            }
           />
         </EventFormGroup>
       </div>

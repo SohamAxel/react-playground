@@ -114,7 +114,7 @@ const AddEventModalForm = ({ hideModal, date, event }: AddEventModalForm) => {
             <AddEventForm
               date={date.toDateString()}
               hideModal={hideModal}
-              event={event}
+              editEventData={event}
             />
           </div>
         </div>,

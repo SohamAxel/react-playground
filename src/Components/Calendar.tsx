@@ -23,8 +23,8 @@ export type Event = {
   | { allDay: true }
   | {
       allDay: false;
-      startTime?: null | string;
-      endTime?: null | string;
+      startTime: string;
+      endTime: string;
     }
 );
 
