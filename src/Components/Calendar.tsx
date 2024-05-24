@@ -12,13 +12,16 @@ import {
   startOfWeek,
 } from "date-fns";
 import CalendarDay from "./CalendarDay";
+import AddEventForm, { Color } from "./AddEventForm";
+import { createPortal } from "react-dom";
 
 type Events = {
   id: React.Key;
   date: Date;
   event: {
     id: React.Key;
-    color: "red" | "blue" | "green";
+    name: string;
+    color: Color;
   } & (
     | { allDay: true }
     | {
