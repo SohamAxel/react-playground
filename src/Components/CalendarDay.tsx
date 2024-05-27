@@ -105,7 +105,7 @@ const AddEventModalForm = ({ hideModal, date, event }: AddEventModalForm) => {
           <div className="overlay"></div>
           <div className="modal-body">
             <div className="modal-title">
-              <div>Add Event</div>
+              <div>{event == undefined ? "Add" : "Edit"} Event</div>
               <small>{format(date, "d/M/yy")}</small>
               <button className="close-btn" onClick={hideModal}>
                 &times;

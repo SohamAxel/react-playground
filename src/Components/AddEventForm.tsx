@@ -1,13 +1,8 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, Fragment, useRef, useState } from "react";
 import EventFormGroup from "./EventFormGroup";
 import { Color, Event, allowedColors } from "../context/CalendarEventContext";
 import { UnionOmit } from "../utils/types";
 import { useCalendarEventContext } from "../context/useCalendarEventContext";
-
-type EventData = UnionOmit<Event, "id">;
-type FormErrors = {
-  [index in keyof EventData]?: string;
-};
 
 type AddEventForm = {
   date: string;
@@ -20,74 +15,54 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
   const [isAllDayChecked, setAllDayChecked] = useState(
     editEventData?.allDay ?? false
   );
-  const colorRef = useRef<Color>(allowedColors[0]);
+  const [selectedColor, setSelectedColor] = useState<Color>(() => {
+    if (editEventData == undefined) {
+      return allowedColors[0];
+    } else {
+      return editEventData.color;
+    }
+  });
   const startTimeRef = useRef<HTMLInputElement>(null);
   const endTimeRef = useRef<HTMLInputElement>(null);
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    name: "",
-    color: "",
-    allDay: "",
-  });
   const { addNewEvent, editEvent } = useCalendarEventContext();
 
   const handleChangeColor = (color: Color) => {
-    colorRef.current = color;
+    setSelectedColor(color);
   };
 
-  const validateForm = (event: EventData): FormErrors => {
-    let error: FormErrors = {};
-    if (event.name === "") {
-      error.name = "Required";
-    }
-
-    if (!event.color) {
-      error.color = "Required";
-    }
-    return error;
-  };
-
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     const name = nameRef.current?.value ?? "";
-    const color = colorRef.current;
-    const eventData: EventData = {
-      name,
-      color,
-      allDay: true,
-    };
-    const error = validateForm(eventData);
-    if (Object.keys(error).length != 0) {
-      setFormErrors(error);
+    const color = selectedColor;
+    const id = crypto.randomUUID();
+    let newEvent: Event | undefined;
+    console.log(isAllDayChecked);
+    if (isAllDayChecked) {
+      newEvent = {
+        id,
+        name,
+        color,
+        allDay: true,
+      };
     } else {
-      const id = crypto.randomUUID();
-      let newEvent: Event | undefined;
-      if (isAllDayChecked) {
-        newEvent = {
-          id,
-          name,
-          color,
-          allDay: true,
-        };
-      } else {
-        newEvent = {
-          id,
-          name,
-          color,
-          allDay: false,
-          startTime: startTimeRef.current?.value ?? "",
-          endTime: endTimeRef.current?.value ?? "",
-        };
-      }
-      if (editEventData) {
-        editEvent(date, {
-          ...newEvent,
-          id: editEventData.id,
-        });
-      } else {
-        addNewEvent(date, newEvent);
-      }
-      hideModal();
+      newEvent = {
+        id,
+        name,
+        color,
+        allDay: false,
+        startTime: startTimeRef.current?.value ?? "",
+        endTime: endTimeRef.current?.value ?? "",
+      };
     }
+    if (editEventData) {
+      editEvent(date, {
+        ...newEvent,
+        id: editEventData.id,
+      });
+    } else {
+      addNewEvent(date, newEvent);
+    }
+    hideModal();
   };
 
   return (
@@ -99,9 +74,9 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
           name="name"
           id="name"
           ref={nameRef}
+          required
           defaultValue={editEventData ? editEventData.name : ""}
         />
-        {formErrors.name && <p>{formErrors.name}</p>}
       </EventFormGroup>
       <EventFormGroup checkbox>
         <input
@@ -109,7 +84,7 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
           name="all-day"
           id="all-day"
           checked={isAllDayChecked}
-          onChange={() => setAllDayChecked((d) => !d)}
+          onChange={(e) => setAllDayChecked(e.target.checked)}
         />
         <label htmlFor="all-day">All Day?</label>
       </EventFormGroup>
@@ -121,6 +96,7 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
             name="start-time"
             id="start-time"
             disabled={isAllDayChecked}
+            required={!isAllDayChecked}
             ref={startTimeRef}
             defaultValue={
               editEventData && !editEventData.allDay
@@ -136,6 +112,7 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
             name="end-time"
             id="end-time"
             disabled={isAllDayChecked}
+            required={!isAllDayChecked}
             ref={endTimeRef}
             defaultValue={
               editEventData && !editEventData.allDay
@@ -148,40 +125,22 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
       <EventFormGroup>
         <label>Color</label>
         <div className="row left">
-          <input
-            type="radio"
-            name="color"
-            value="blue"
-            id="blue"
-            className="color-radio"
-            onChange={() => handleChangeColor("blue")}
-          />
-          <label htmlFor="blue">
-            <span className="sr-only">Blue</span>
-          </label>
-          <input
-            type="radio"
-            name="color"
-            value="red"
-            id="red"
-            className="color-radio"
-            onChange={() => handleChangeColor("red")}
-          />
-          <label htmlFor="red">
-            <span className="sr-only">Red</span>
-          </label>
-          <input
-            type="radio"
-            name="color"
-            value="green"
-            id="green"
-            className="color-radio"
-            onChange={() => handleChangeColor("green")}
-          />
-          <label htmlFor="green">
-            <span className="sr-only">Green</span>
-          </label>
-          {formErrors.color && <p>{formErrors.color}</p>}
+          {allowedColors.map((color) => (
+            <Fragment key={color}>
+              <input
+                type="radio"
+                name="color"
+                value={color}
+                id={color}
+                className="color-radio"
+                checked={selectedColor == color}
+                onChange={() => handleChangeColor(color)}
+              />
+              <label htmlFor={color}>
+                <span className="sr-only">{color}</span>
+              </label>
+            </Fragment>
+          ))}
         </div>
       </EventFormGroup>
       <div className="row">
