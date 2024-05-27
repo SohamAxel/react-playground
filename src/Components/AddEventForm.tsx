@@ -1,13 +1,10 @@
 import { FormEvent, useRef, useState } from "react";
 import EventFormGroup from "./EventFormGroup";
-import {
-  Color,
-  Event,
-  allowedColors,
-  getCalendarEventContext,
-} from "./Calendar";
+import { Color, Event, allowedColors } from "../context/CalendarEventContext";
+import { UnionOmit } from "../utils/types";
+import { useCalendarEventContext } from "../context/useCalendarEventContext";
 
-type EventData = Omit<Event, "id">;
+type EventData = UnionOmit<Event, "id">;
 type FormErrors = {
   [index in keyof EventData]?: string;
 };
@@ -31,7 +28,7 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
     color: "",
     allDay: "",
   });
-  const { addNewEvent, editEvent } = getCalendarEventContext();
+  const { addNewEvent, editEvent } = useCalendarEventContext();
 
   const handleChangeColor = (color: Color) => {
     colorRef.current = color;

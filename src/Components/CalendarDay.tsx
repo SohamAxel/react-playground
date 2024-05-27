@@ -2,7 +2,9 @@ import { format, isToday } from "date-fns";
 import AddEventForm from "./AddEventForm";
 import { createPortal } from "react-dom";
 import { useRef, useState } from "react";
-import { Event, getCalendarEventContext } from "./Calendar";
+import { cc } from "../utils/cc";
+import { Event } from "../context/CalendarEventContext";
+import { useCalendarEventContext } from "../context/useCalendarEventContext";
 
 type CalendarDay = {
   date: Date;
@@ -18,7 +20,7 @@ type AddEventModalForm = {
 const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
   const [showEventForm, setShowEventForm] = useState(false);
   const day = date.getDate();
-  const { events } = getCalendarEventContext();
+  const { events } = useCalendarEventContext();
   const eventData = useRef<Event>();
   const thisDayEvents = events.find(
     (event) => event.date === date.toDateString()
@@ -40,9 +42,8 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
     <>
       <div className="day-header">
         {weekHeader && <div className="week-name">{weekHeader}</div>}
-        <div className={`day-number ${isToday(date) ? "today" : undefined}`}>
-          {day}
-        </div>
+        {/* <div className={`day-number ${isToday(date) ? "today" : undefined}`}> */}
+        <div className={cc("day-number", isToday(date) && "today")}>{day}</div>
         <button
           className="add-event-btn"
           onClick={() => setShowEventForm(true)}
