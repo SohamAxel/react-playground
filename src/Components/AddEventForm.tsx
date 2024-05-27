@@ -22,7 +22,13 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
       return editEventData.color;
     }
   });
-  const startTimeRef = useRef<HTMLInputElement>(null);
+  const [startTime, setStartTime] = useState(() => {
+    if (editEventData !== undefined && !editEventData.allDay) {
+      return editEventData.startTime;
+    } else {
+      return "";
+    }
+  });
   const endTimeRef = useRef<HTMLInputElement>(null);
   const { addNewEvent, editEvent } = useCalendarEventContext();
 
@@ -30,27 +36,28 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
     setSelectedColor(color);
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
     const name = nameRef.current?.value ?? "";
     const color = selectedColor;
     const id = crypto.randomUUID();
-    let newEvent: Event | undefined;
+    let newEvent: Event;
+    let commonProps = {
+      id,
+      name,
+      color,
+    };
     console.log(isAllDayChecked);
     if (isAllDayChecked) {
       newEvent = {
-        id,
-        name,
-        color,
+        ...commonProps,
         allDay: true,
       };
     } else {
       newEvent = {
-        id,
-        name,
-        color,
+        ...commonProps,
         allDay: false,
-        startTime: startTimeRef.current?.value ?? "",
+        startTime: startTime,
         endTime: endTimeRef.current?.value ?? "",
       };
     }
@@ -97,12 +104,8 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
             id="start-time"
             disabled={isAllDayChecked}
             required={!isAllDayChecked}
-            ref={startTimeRef}
-            defaultValue={
-              editEventData && !editEventData.allDay
-                ? editEventData.startTime
-                : ""
-            }
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
           />
         </EventFormGroup>
         <EventFormGroup>
@@ -110,6 +113,7 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
           <input
             type="time"
             name="end-time"
+            min={startTime}
             id="end-time"
             disabled={isAllDayChecked}
             required={!isAllDayChecked}
