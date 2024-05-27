@@ -32,6 +32,7 @@ type CalendarEventContext = {
   events: Events[];
   addNewEvent: (date: string, event: Event) => void;
   editEvent: (date: string, toUpdateEvent: Event) => void;
+  deleteEvent: (date: string, id: React.Key) => void;
 };
 
 export const CalendarEventContext = createContext<CalendarEventContext | null>(
@@ -76,6 +77,21 @@ export const CalendarContextProvider = ({
     });
   };
 
+  const deleteEvent = (date: string, id: React.Key) => {
+    setEvents((oldEvents) => {
+      return oldEvents.map((event) => {
+        if (event.date == date) {
+          return {
+            ...event,
+            event: event.event.filter((e) => e.id !== id),
+          };
+        } else {
+          return event;
+        }
+      });
+    });
+  };
+
   const editEvent = (date: String, toUpdateEvent: Event) => {
     setEvents((oldEvents) => {
       return oldEvents.map((event) => {
@@ -97,7 +113,9 @@ export const CalendarContextProvider = ({
   };
 
   return (
-    <CalendarEventContext.Provider value={{ events, addNewEvent, editEvent }}>
+    <CalendarEventContext.Provider
+      value={{ events, addNewEvent, editEvent, deleteEvent }}
+    >
       {" "}
       {children}
     </CalendarEventContext.Provider>

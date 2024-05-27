@@ -1,7 +1,6 @@
 import { FormEvent, Fragment, useRef, useState } from "react";
 import EventFormGroup from "./EventFormGroup";
 import { Color, Event, allowedColors } from "../context/CalendarEventContext";
-import { UnionOmit } from "../utils/types";
 import { useCalendarEventContext } from "../context/useCalendarEventContext";
 
 type AddEventForm = {
@@ -30,7 +29,7 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
     }
   });
   const endTimeRef = useRef<HTMLInputElement>(null);
-  const { addNewEvent, editEvent } = useCalendarEventContext();
+  const { addNewEvent, editEvent, deleteEvent } = useCalendarEventContext();
 
   const handleChangeColor = (color: Color) => {
     setSelectedColor(color);
@@ -151,9 +150,18 @@ const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
         <button className="btn btn-success" type="submit">
           {editEventData !== undefined ? "Save" : "Add"}
         </button>
-        <button className="btn btn-delete" type="button">
-          {editEventData !== undefined ? "Delete" : "Close"}
-        </button>
+        {editEventData !== undefined && (
+          <button
+            className="btn btn-delete"
+            type="button"
+            onClick={() => {
+              deleteEvent(date, editEventData.id);
+              hideModal();
+            }}
+          >
+            Delete
+          </button>
+        )}
       </div>
     </form>
   );
