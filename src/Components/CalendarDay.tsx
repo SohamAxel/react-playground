@@ -16,8 +16,7 @@ type AddEventModalForm = {
 };
 
 const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
-  const [showAddEventForm, setShowAddEventForm] = useState(false);
-  const [showEditEventForm, setShowEditEventForm] = useState(false);
+  const [showEventForm, setShowEventForm] = useState(false);
   const day = date.getDate();
   const { events } = getCalendarEventContext();
   const eventData = useRef<Event>();
@@ -26,14 +25,14 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
   );
 
   const hideModal = () => {
-    setShowAddEventForm(false);
+    setShowEventForm(false);
     eventData.current = undefined;
   };
 
   const handleEventEdit = (id: React.Key) => {
     if (thisDayEvents != undefined) {
       eventData.current = thisDayEvents.event.find((event) => event.id == id);
-      setShowAddEventForm(true);
+      setShowEventForm(true);
     }
   };
 
@@ -46,7 +45,7 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
         </div>
         <button
           className="add-event-btn"
-          onClick={() => setShowAddEventForm(true)}
+          onClick={() => setShowEventForm(true)}
         >
           +
         </button>
@@ -84,7 +83,7 @@ const CalendarDay = ({ date, weekHeader }: CalendarDay) => {
               }
             })}
       </div>
-      {showAddEventForm && (
+      {showEventForm && (
         <AddEventModalForm
           hideModal={hideModal}
           date={date}

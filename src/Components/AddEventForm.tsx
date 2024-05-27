@@ -1,38 +1,35 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import EventFormGroup from "./EventFormGroup";
-import { Color, Event, getCalendarEventContext } from "./Calendar";
+import {
+  Color,
+  Event,
+  allowedColors,
+  getCalendarEventContext,
+} from "./Calendar";
 
+type EventData = Omit<Event, "id">;
 type FormErrors = {
-  name?: string;
-  allDay?: string;
-  color?: string;
+  [index in keyof EventData]?: string;
 };
 
-type EventData = {
-  name?: string;
-  color?: string;
-};
-
-const AddEventForm = ({
-  date,
-  hideModal,
-  editEventData,
-}: {
+type AddEventForm = {
   date: string;
   hideModal: () => void;
   editEventData?: Event;
-}) => {
+};
+
+const AddEventForm = ({ date, hideModal, editEventData }: AddEventForm) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const [isAllDayChecked, setAllDayChecked] = useState(
     editEventData?.allDay ?? false
   );
-  const colorRef = useRef<Color>();
+  const colorRef = useRef<Color>(allowedColors[0]);
   const startTimeRef = useRef<HTMLInputElement>(null);
   const endTimeRef = useRef<HTMLInputElement>(null);
   const [formErrors, setFormErrors] = useState<FormErrors>({
     name: "",
-    allDay: "",
     color: "",
+    allDay: "",
   });
   const { addNewEvent, editEvent } = getCalendarEventContext();
 
@@ -40,7 +37,7 @@ const AddEventForm = ({
     colorRef.current = color;
   };
 
-  const validateForm = (event: EventData) => {
+  const validateForm = (event: EventData): FormErrors => {
     let error: FormErrors = {};
     if (event.name === "") {
       error.name = "Required";
@@ -51,24 +48,39 @@ const AddEventForm = ({
     }
     return error;
   };
+
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const name = nameRef.current?.value ?? "";
+    const color = colorRef.current;
     const eventData: EventData = {
-      name: nameRef.current?.value,
-      color: colorRef.current,
+      name,
+      color,
+      allDay: true,
     };
     const error = validateForm(eventData);
     if (Object.keys(error).length != 0) {
       setFormErrors(error);
     } else {
-      let newEvent: Event = {
-        id: crypto.randomUUID(),
-        name: nameRef.current ? nameRef.current.value : "",
-        color: colorRef.current ? colorRef.current : "blue",
-        allDay: isAllDayChecked,
-        startTime: isAllDayChecked ? "" : startTimeRef.current?.value,
-        endTime: isAllDayChecked ? "" : endTimeRef.current?.value,
-      };
+      const id = crypto.randomUUID();
+      let newEvent: Event | undefined;
+      if (isAllDayChecked) {
+        newEvent = {
+          id,
+          name,
+          color,
+          allDay: true,
+        };
+      } else {
+        newEvent = {
+          id,
+          name,
+          color,
+          allDay: false,
+          startTime: startTimeRef.current?.value ?? "",
+          endTime: endTimeRef.current?.value ?? "",
+        };
+      }
       if (editEventData) {
         editEvent(date, {
           ...newEvent,
@@ -177,10 +189,10 @@ const AddEventForm = ({
       </EventFormGroup>
       <div className="row">
         <button className="btn btn-success" type="submit">
-          Add
+          {editEventData !== undefined ? "Save" : "Add"}
         </button>
         <button className="btn btn-delete" type="button">
-          Delete
+          {editEventData !== undefined ? "Delete" : "Close"}
         </button>
       </div>
     </form>

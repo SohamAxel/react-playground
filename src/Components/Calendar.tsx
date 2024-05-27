@@ -13,7 +13,8 @@ import {
 } from "date-fns";
 import CalendarDay from "./CalendarDay";
 
-export type Color = "red" | "blue" | "green";
+export const allowedColors = ["red", "blue", "green"] as const;
+export type Color = (typeof allowedColors)[number];
 
 export type Event = {
   id: React.Key;
@@ -40,7 +41,15 @@ type CalendarEventContext = {
   editEvent: (date: string, toUpdateEvent: Event) => void;
 };
 
-const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+export const weekDays = [
+  "SUN",
+  "MON",
+  "TUE",
+  "WED",
+  "THU",
+  "FRI",
+  "SAT",
+] as const;
 
 const CalendarEventContext = createContext<CalendarEventContext | null>(null);
 
@@ -57,11 +66,11 @@ const Calendar = () => {
   const [visibleMonth, setVisibleMonth] = useState(new Date());
   const [events, setEvents] = useState<Events[]>([]);
   const today = new Date();
-  console.log(events);
   const visibleDates = eachDayOfInterval({
     start: startOfWeek(startOfMonth(visibleMonth)),
     end: endOfWeek(endOfMonth(visibleMonth)),
   });
+
   const addNewEvent = (date: string, newEvent: Event) => {
     setEvents((oldEvents) => {
       let isObjectPresent = oldEvents.find((event) => event.date == date);

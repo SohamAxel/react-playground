@@ -1,6 +1,4 @@
 import { format } from "date-fns";
-import React from "react";
-import { Event, Events } from "./Calendar";
 
 type CalendarHeader = {
   date: Date;
