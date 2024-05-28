@@ -1,9 +1,6 @@
-function App() {
-  return (
-    <>
-      <p>Hi</p>
-    </>
-  );
-}
+import { StateForm } from "./StateForm"
+import "./styles.css"
 
-export default App;
+export default function App() {
+  return <StateForm onSubmit={() => alert("Success")} />
+}
