@@ -1,14 +1,13 @@
 import React, { memo, useEffect, useState } from "react";
-import { useCount } from "../hooks/useCount";
 
 const Counter = ({ initialCount }) => {
-  const { count, increment, decrement } = useCount(initialCount);
+  const [count, setCount] = useState(initialCount);
 
   return (
     <>
-      <button onClick={increment}>-</button>
-      <div data-testid="count">{count}</div>
-      <button onClick={decrement}>+</button>
+      <button onClick={() => setCount((d) => d - 1)}>-</button>
+      <div>{count}</div>
+      <button onClick={() => setCount((d) => d + 1)}>+</button>
     </>
   );
 };
