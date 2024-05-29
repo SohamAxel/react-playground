@@ -27,3 +27,13 @@ This is not the ideal way as it loses its accessibility aspect. Instead we can u
 
 To fix this repeatative codes we can create a custom hook which will return the value through the useContext hook after null checking. Follow the example in useContentext function in CounterContext.tsx
 It is also generally a good idea to have the Context code and the provider in a seperate file as a component and use that component.
+
+**Improve performance of useContext**
+In the current implemtation we can see CounterUpdate and CounterDisplay has buttons to increment/decrement and display count respectively. If we inspect the profile after few actions, even though technically no change is happening in the CounterUpdate component, it still reruns when the Context changes.
+We can improve this by spliting the count and dispatch in 2 seperate contexts and wrapping the children as
+
+```JSX
+<dispathContext><valueContext>{children}</dispathContext></valueContext>
+```
+
+This will only update the value Context when the count changes
