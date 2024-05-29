@@ -37,3 +37,43 @@ We can improve this by spliting the count and dispatch in 2 seperate contexts an
 ```
 
 This will only update the value Context when the count changes
+
+# Reduce useEffect usage
+
+# Controlled vs Uncontrolled components
+
+Components which are being controlled by outside state are Controlled Components and if the component handles the state and changes in itself it is unControlled Component.
+Example: Accordian can be uncontrolled components, expand and collapse can be handled inside the component itself. However we might need a feature like when one acordian is expanded, collapse all other accordians. To achieve this we need to make the Accordian component a controlled Component.
+It depends on the situation to use which over other.
+
+# Compound Component
+
+Breaking components into sections.
+Let's say we have a component like -
+
+```JSX
+const Card = ({ header, footer, children }: Card) => {
+  return (
+    <>
+      <div className="card">
+        {header && <div className="card-header">{header}</div>}
+        <div className="card-header">{children}</div>
+        {footer && <div className="card-header">{footer}</div>}
+      </div>
+    </>
+  );
+};
+```
+
+If each of the components(header, body and footer) were complex it would be very difficult to read. Not to mention, whereever the card is used the code looks messy.
+
+```JSX
+<Card header={<>Header</>} footer={<>Footer</>}>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident
+  facilis natus perspiciatis accusamus amet, odio possimus quisquam
+  dignissimos laudantium quis nisi delectus, dicta beatae optio doloremque
+  suscipit alias officia fugit.
+</Card>
+```
+
+We can fix this by separating each components. Example in Card.tsx

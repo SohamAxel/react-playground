@@ -4,9 +4,9 @@ import App from "./App.tsx";
 import { ToastMessageProvider } from "./contexts/ToastMessageProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ToastMessageProvider>
-      <App />
-    </ToastMessageProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <ToastMessageProvider>
+    <App />
+  </ToastMessageProvider>
+  // {/* </React.StrictMode> */}
 );
