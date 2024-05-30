@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import HookUseCallback from "./components/HookUseCallback";
+import SimpleCounter from "./components/SimpleCounter";
+import HookUseMemo from "./components/HookUseMemo";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [input, setInput] = useState("");
+  const [state, setState] = useState(0);
+  const [toggleCounter, setToggleCounter] = useState(true);
   return (
     <>
+      <h1>Hello</h1>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <button onClick={() => setToggleCounter((t) => !t)}>Toggle</button>
+        {toggleCounter && <SimpleCounter />}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={() => setState((c) => c + 1)}>{state}</button>
+      <HookUseCallback parentState={state} />
+      <HookUseMemo parentState={state} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

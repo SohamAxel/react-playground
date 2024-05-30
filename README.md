@@ -1,8 +1,8 @@
-# React + Vite
+# Notes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. Even if we are not printing any state in a component, if the state updates the component rerenders. But virtual dom will not update the actual DOM as nothing changed
 
-Currently, two official plugins are available:
+2. UseCallback is used to cache the function. Take the example from HookUseCallback.jsx file.
+   As myFunction has a usecallback dependency on parentState, so the console.log output will remain same until the parentState changes. We can verify that from line 14 and line 15.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+3. Even it may seem wrapping every component in React.memo will increase performance, it is not the case in certain scenarios which will add an extra overhead. a. If the component is already lightweight it will add an extra overhead. b. If the props on the component frequently changes c. If the component relies on internal state rather than external props.
