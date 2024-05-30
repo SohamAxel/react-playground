@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useDeferredValue, useState, useTransition } from "react";
+import SlowChild from "./SlowChild";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [value, setValue] = useState("");
+  const deferedQuery = useDeferredValue(value);
+  const [tab, setTab] = useState("post");
+  const [isPending, setTransition] = useTransition();
+  console.log("Original Value " + value);
+  console.log("Defered Value " + deferedQuery);
+
+  const handleChangeTab = (tab) => {
+    setTransition(() => {
+      setTab(tab);
+    });
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      {/* <SlowChild value={deferedQuery} /> */}
+      <button onClick={() => handleChangeTab("post")}>Post</button>
+      <button onClick={() => handleChangeTab("comments")}>Comments</button>
+      <button onClick={() => handleChangeTab("users")}>Author</button>
+      {tab == "post" ? (
+        <h1>Post</h1>
+      ) : tab == "comments" ? (
+        <SlowChild value={50000} />
+      ) : (
+        <h1>Users</h1>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
