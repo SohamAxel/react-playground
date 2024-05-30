@@ -41,6 +41,11 @@ Even though we are unloading one counter and rendering other React virtual dom w
 <Counter key="cats">
 ```
 
+## Event Capturing
+
+In js event's goes through 2 phases the Capture phase (top to bottom) and the bubble phase (bottom to up). By default all event are Bubble phase and in order to add capture phase event use Capture at end of event. Eg. onClick and onClickCapture
+Click the child p in each div to verify the behavior in EventCapturing.jsx.
+
 # Advanced Hooks
 
 ## useLayoutEffect

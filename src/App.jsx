@@ -5,6 +5,7 @@ import CustomModal from "./Components/CustomModal";
 import ForwardRefComponent from "./Components/ForwardRefComponent";
 import PortalComponent from "./Components/PortalComponent";
 import CallbackRefElementChanges from "./Components/CallbackRefElementChanges";
+import EventCapturing from "./Components/EventCapturing";
 
 function App() {
   const [showElement, setShowElement] = useState(true);
@@ -18,6 +19,7 @@ function App() {
       <button onClick={() => setShowElement((d) => !d)}>Toggle Element</button>
       {showElement && <CallbackRef />}
       <CallbackRefElementChanges />
+      <EventCapturing />
     </>
   );
 }
