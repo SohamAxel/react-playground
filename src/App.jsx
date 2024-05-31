@@ -1,6 +1,7 @@
 import { useState } from "react";
 import HookUseDeferedValue from "./HookUseDeferedValue";
 import HookUseTransition from "./HookUseTransition";
+import ReactLazy from "./ReactLazy";
 
 function App() {
   const [value, setValue] = useState("");
@@ -14,8 +15,9 @@ function App() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      <HookUseDeferedValue value={value} />
-      <HookUseTransition />
+      {/* <HookUseDeferedValue value={value} /> */}
+      {/* <HookUseTransition /> */}
+      <ReactLazy />
     </>
   );
 }

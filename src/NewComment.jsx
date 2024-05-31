@@ -1,7 +1,7 @@
 import React from "react";
 
 const NewComment = () => {
-  return <div>NewComment</div>;
+  return <textarea></textarea>;
 };
 
 export default NewComment;
