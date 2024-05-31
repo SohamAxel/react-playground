@@ -31,7 +31,7 @@ const Comments = lazy(() =>
 
 ## Suspense
 
-We can use Suspense for contents which takes some time to load. It has a attribute called fallback which will show until the Component loads.
+We can use Suspense for contents which takes some time to load. It has a attribute called fallback which will show until the Component loads. And to handle error, wrap the Suspense in error boundary.
 
 ```JSX
 <Suspense fallback={<h1>Loading</h1>}>
@@ -40,6 +40,36 @@ We can use Suspense for contents which takes some time to load. It has a attribu
 ```
 
 If we have multiple async components in a single suspense block it will wait for all the components to load then it will render the components. Ex if we have ComponentA and ComponentB in a single suspense block. ComponentA takes 1s to load and ComponentB takes 5s to load. Suspense will wait for complete 5s and then render both the components. We can counter this by wrapping the components in different Suspense block
+
+## Suspense with react router
+
+We can use the defer function present in react router and use it in the loader function. It expects an object with a property and value should be a promise. We can then wrap our component in Suspense to work like following
+
+```JSX
+const loader = ({ request, param }) => {
+  // return wait({ data: "Loaded" }, 5000);
+  return defer({ dataPromise: wait("Loaded", 1000) });
+};
+
+const Posts = () => {
+  const { dataPromise } = useLoaderData();
+
+  // return <div>Posts - {data}</div>;
+  return (
+    <>
+      Posts -
+      <Suspense fallback={"Loading"}>
+        <Await resolve={dataPromise}>
+          { data => data}
+        </Await>
+      </Suspense>
+    </>
+  );
+};
+```
+
+We can even use React.lazy load the element while creating the browser router.
+Note-While creating a lazy loading component in browser router, we have to keep the component and loader function seperately as while defining the route it will need the loader function hence the loader file will auto download when the RouterProivder loads and if the component is in the same file it will download as well. Hence keep the 2 files seperate
 
 ## useDefered hook
 

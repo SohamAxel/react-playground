@@ -1,7 +1,6 @@
 import { useState } from "react";
-import HookUseDeferedValue from "./HookUseDeferedValue";
-import HookUseTransition from "./HookUseTransition";
 import ReactLazy from "./ReactLazy";
+import RouterComponent from "./RouterComponent";
 
 function App() {
   const [value, setValue] = useState("");
@@ -18,6 +17,7 @@ function App() {
       {/* <HookUseDeferedValue value={value} /> */}
       {/* <HookUseTransition /> */}
       <ReactLazy />
+      <RouterComponent />
     </>
   );
 }
