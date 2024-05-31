@@ -1,16 +1,19 @@
-import { useEffect, useRef } from "react";
-import { Form, Link, useLoaderData } from "react-router-dom";
+import { Suspense, useEffect, useRef } from "react";
+import { Await, Form, Link, defer, useLoaderData } from "react-router-dom";
 import { getPosts } from "../api/posts";
 import { getUsers } from "../api/users";
 import { FormGroup } from "../components/FormGroup";
-import { PostCard } from "../components/PostCard";
+import { PostCard, SkeletonPostCard } from "../components/PostCard";
 
 function PostList() {
   const {
-    posts,
-    users,
+    postsPromise,
+    usersPromise,
     searchParams: { query, userId },
   } = useLoaderData();
+  // console.log(query);
+  // console.log(userId);
+  // console.log(usersPromise);
   const queryRef = useRef();
   const userIdRef = useRef();
 
@@ -41,23 +44,52 @@ function PostList() {
           </FormGroup>
           <FormGroup>
             <label htmlFor="userId">Author</label>
-            <select type="search" name="userId" id="userId" ref={userIdRef}>
-              <option value="">Any</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.name}
-                </option>
-              ))}
-            </select>
+            <Suspense
+              fallback={
+                <select
+                  type="search"
+                  name="userId"
+                  id="userId"
+                  className="skeleton skeleton-input"
+                  ref={userIdRef}
+                ></select>
+              }
+            >
+              <Await resolve={usersPromise}>
+                {(users) => (
+                  <select
+                    type="search"
+                    name="userId"
+                    id="userId"
+                    ref={userIdRef}
+                  >
+                    <option value="">Any</option>
+                    {users.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </Await>
+            </Suspense>
           </FormGroup>
           <button className="btn">Filter</button>
         </div>
       </Form>
 
       <div className="card-grid">
-        {posts.map((post) => (
-          <PostCard key={post.id} {...post} />
-        ))}
+        <Suspense
+          fallback={Array.from(Array(6).keys()).map((e) => (
+            <SkeletonPostCard key={e} />
+          ))}
+        >
+          <Await resolve={postsPromise}>
+            {(posts) =>
+              posts.map((post) => <PostCard key={post.id} {...post} />)
+            }
+          </Await>
+        </Suspense>
       </div>
     </>
   );
@@ -73,11 +105,11 @@ async function loader({ request: { signal, url } }) {
   const posts = getPosts({ signal, params: filterParams });
   const users = getUsers({ signal });
 
-  return {
-    posts: await posts,
-    users: await users,
+  return defer({
+    postsPromise: posts,
+    usersPromise: users,
     searchParams: { query, userId },
-  };
+  });
 }
 
 export const postListRoute = {
