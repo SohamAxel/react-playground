@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react"
 import {
   Await,
   Form,
@@ -6,33 +6,26 @@ import {
   defer,
   useLoaderData,
   useNavigation,
-} from "react-router-dom";
-import { getPosts } from "../api/posts";
-import { getUsers } from "../api/users";
-import { FormGroup } from "../components/FormGroup";
-import { PostCard, SkeletonPostCard } from "../components/PostCard";
+} from "react-router-dom"
+import { getPosts } from "../api/posts"
+import { getUsers } from "../api/users"
+import { FormGroup } from "../components/FormGroup"
+import { PostCard, SkeletonPostCard } from "../components/PostCard"
+import { SkeletonList } from "../components/Skeleton"
 
 function PostList() {
   const {
     postsPromise,
     usersPromise,
     searchParams: { query, userId },
-  } = useLoaderData();
-  // console.log(query);
-  // console.log(userId);
-  // console.log(usersPromise);
-  const queryRef = useRef();
-  const userIdRef = useRef();
-  const { state } = useNavigation();
-  const isLoading = state === "loading";
+  } = useLoaderData()
+  const queryRef = useRef()
+  const { state } = useNavigation()
+  const isLoading = state === "loading"
 
   useEffect(() => {
-    queryRef.current.value = query || "";
-  }, [query]);
-
-  useEffect(() => {
-    userIdRef.current.value = userId || "";
-  }, [userId]);
+    queryRef.current.value = query || ""
+  }, [query])
 
   return (
     <>
@@ -53,29 +46,23 @@ function PostList() {
           </FormGroup>
           <FormGroup>
             <label htmlFor="userId">Author</label>
-            {isLoading && "Loading..."}
             <Suspense
               fallback={
-                <select
-                  type="search"
-                  name="userId"
-                  id="userId"
-                  className="skeleton skeleton-input"
-                  ref={userIdRef}
-                ></select>
+                <select type="search" name="userId" id="userId" disabled>
+                  <option value="">Loading...</option>
+                </select>
               }
             >
               <Await resolve={usersPromise}>
-                {(users) => (
+                {users => (
                   <select
                     type="search"
                     name="userId"
                     id="userId"
-                    ref={userIdRef}
                     defaultValue={userId || ""}
                   >
                     <option value="">Any</option>
-                    {users.map((user) => (
+                    {users.map(user => (
                       <option key={user.id} value={user.id}>
                         {user.name}
                       </option>
@@ -89,41 +76,42 @@ function PostList() {
         </div>
       </Form>
 
+      {isLoading && <div className="mb-2">Loading...</div>}
       <div className="card-grid">
         <Suspense
-          fallback={Array.from(Array(6).keys()).map((e) => (
-            <SkeletonPostCard key={e} />
-          ))}
+          fallback={
+            <SkeletonList amount={6}>
+              <SkeletonPostCard />
+            </SkeletonList>
+          }
         >
           <Await resolve={postsPromise}>
-            {(posts) =>
-              posts.map((post) => <PostCard key={post.id} {...post} />)
-            }
+            {posts => posts.map(post => <PostCard key={post.id} {...post} />)}
           </Await>
         </Suspense>
       </div>
     </>
-  );
+  )
 }
 
 async function loader({ request: { signal, url } }) {
-  const searchParams = new URL(url).searchParams;
-  const query = searchParams.get("query");
-  const userId = searchParams.get("userId");
-  const filterParams = { q: query };
-  if (userId !== "") filterParams.userId = userId;
+  const searchParams = new URL(url).searchParams
+  const query = searchParams.get("query")
+  const userId = searchParams.get("userId")
+  const filterParams = { q: query }
+  if (userId !== "") filterParams.userId = userId
 
-  const posts = getPosts({ signal, params: filterParams });
-  const users = getUsers({ signal });
+  const posts = getPosts({ signal, params: filterParams })
+  const users = getUsers({ signal })
 
   return defer({
     postsPromise: posts,
     usersPromise: users,
     searchParams: { query, userId },
-  });
+  })
 }
 
 export const postListRoute = {
   loader,
   element: <PostList />,
-};
+}

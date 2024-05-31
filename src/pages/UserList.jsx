@@ -10,7 +10,7 @@ function UserList() {
       <div className="card-grid">
         <Suspense
           fallback={Array.from(Array(6).keys()).map((e) => (
-            <div className="card">
+            <div key={e} className="card">
               <div className="card-header">
                 <div
                   className="skeleton"

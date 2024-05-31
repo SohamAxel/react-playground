@@ -1,9 +1,9 @@
-import { Await, Form, Link } from "react-router-dom";
-import { FormGroup } from "./FormGroup";
-import { Suspense } from "react";
-import { SkeletonInput } from "./Skeleton";
+import { Await, Form, Link } from "react-router-dom"
+import { FormGroup } from "./FormGroup"
+import { Suspense } from "react"
+import { SkeletonInput } from "./Skeleton"
 
-const DEFAULT_VALUE_PROMISE = Promise.resolve({});
+const DEFAULT_VALUE_PROMISE = Promise.resolve({})
 
 export function PostForm({
   usersPromise,
@@ -18,7 +18,7 @@ export function PostForm({
           <label htmlFor="title">Title</label>
           <Suspense fallback={<SkeletonInput />}>
             <Await resolve={defaultValuesPromise}>
-              {(defaultValues) => (
+              {defaultValues => (
                 <input
                   type="text"
                   name="title"
@@ -33,7 +33,7 @@ export function PostForm({
           <label htmlFor="userId">Author</label>
           <Suspense fallback={<SkeletonInput />}>
             <Await resolve={defaultValuesPromise}>
-              {(defaultValues) => (
+              {defaultValues => (
                 <Suspense
                   fallback={
                     <select name="userId" id="userId" disabled>
@@ -42,13 +42,13 @@ export function PostForm({
                   }
                 >
                   <Await resolve={usersPromise}>
-                    {(users) => (
+                    {users => (
                       <select
                         name="userId"
                         id="userId"
                         defaultValue={defaultValues.userId}
                       >
-                        {users.map((user) => (
+                        {users.map(user => (
                           <option key={user.id} value={user.id}>
                             {user.name}
                           </option>
@@ -67,7 +67,7 @@ export function PostForm({
           <label htmlFor="body">Body</label>
           <Suspense fallback={<SkeletonInput />}>
             <Await resolve={defaultValuesPromise}>
-              {(defaultValues) => (
+              {defaultValues => (
                 <textarea
                   name="body"
                   id="body"
@@ -87,23 +87,23 @@ export function PostForm({
         </button>
       </div>
     </Form>
-  );
+  )
 }
 
 export function postFormValidator({ title, body, userId }) {
-  const errors = {};
+  const errors = {}
 
   if (title === "") {
-    errors.title = "Required";
+    errors.title = "Required"
   }
 
   if (body === "") {
-    errors.body = "Required";
+    errors.body = "Required"
   }
 
   if (userId === "") {
-    errors.userId = "Required";
+    errors.userId = "Required"
   }
 
-  return errors;
+  return errors
 }

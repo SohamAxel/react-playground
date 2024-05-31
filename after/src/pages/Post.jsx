@@ -1,22 +1,22 @@
-import { Await, Link, defer, useLoaderData } from "react-router-dom";
-import { getComments } from "../api/comments";
-import { getPost } from "../api/posts";
-import { getUser } from "../api/users";
+import { Await, Link, defer, useLoaderData } from "react-router-dom"
+import { getComments } from "../api/comments"
+import { getPost } from "../api/posts"
+import { getUser } from "../api/users"
 import {
   SimpleSkeletonText,
   Skeleton,
   SkeletonList,
-} from "../components/Skeleton";
-import { Suspense } from "react";
+} from "../components/Skeleton"
+import { Suspense } from "react"
 
 function Post() {
-  const { commentsPromise, postPromise, userPromise } = useLoaderData();
+  const { commentsPromise, postPromise, userPromise } = useLoaderData()
 
   return (
     <>
       <h1 className="page-title">
         <SimpleSkeletonText resolve={postPromise}>
-          {(post) => post.title}
+          {post => post.title}
         </SimpleSkeletonText>
         <div className="title-btns">
           <Link className="btn btn-outline" to="edit">
@@ -28,7 +28,7 @@ function Post() {
         By:{" "}
         <Suspense fallback={<Skeleton short inline />}>
           <Await resolve={userPromise}>
-            {(user) => <Link to={`/users/${user.id}`}>{user.name}</Link>}
+            {user => <Link to={`/users/${user.id}`}>{user.name}</Link>}
           </Await>
         </Suspense>
       </span>
@@ -42,7 +42,7 @@ function Post() {
             </>
           }
         >
-          <Await resolve={postPromise}>{(post) => post.body}</Await>
+          <Await resolve={postPromise}>{post => post.body}</Await>
         </Suspense>
       </div>
 
@@ -64,8 +64,8 @@ function Post() {
           }
         >
           <Await resolve={commentsPromise}>
-            {(comments) =>
-              comments.map((comment) => (
+            {comments =>
+              comments.map(comment => (
                 <div key={comment.id} className="card">
                   <div className="card-body">
                     <div className="text-sm mb-1">{comment.email}</div>
@@ -78,21 +78,21 @@ function Post() {
         </Suspense>
       </div>
     </>
-  );
+  )
 }
 
 function loader({ request: { signal }, params: { postId } }) {
-  const comments = getComments(postId, { signal });
-  const post = getPost(postId, { signal });
+  const comments = getComments(postId, { signal })
+  const post = getPost(postId, { signal })
 
   return defer({
     commentsPromise: comments,
     postPromise: post,
-    userPromise: post.then((post) => getUser(post.userId, { signal })),
-  });
+    userPromise: post.then(post => getUser(post.userId, { signal })),
+  })
 }
 
 export const postRoute = {
   loader,
   element: <Post />,
-};
+}
