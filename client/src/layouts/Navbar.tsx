@@ -47,7 +47,7 @@ const Navbar = () => {
             <NavItem to="/" label="Task Board" />
             <NavItem to="/" label="Job Lisitng" />
             {currentUser.name === "Anonymous" ? (
-              <LoginButton />
+              <NavItem to="/login" label="Login" />
             ) : (
               <NavItem to="/" label="test@test.com" />
             )}
