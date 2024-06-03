@@ -127,3 +127,5 @@ The tasks you need to complete are saved as issues on the GitHub repository. The
 3. Create/Edit/Delete Job Listings
 4. Job Listing Payments
 5. Job Board/Filtering
+
+react-hook-form
