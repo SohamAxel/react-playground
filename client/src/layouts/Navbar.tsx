@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Context } from "@/contexts/ThemeProvider";
-import { Sun } from "lucide-react";
+import { Menu, Sun } from "lucide-react";
 import { Moon } from "lucide-react";
 import { useContext, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -40,9 +40,32 @@ const Navbar = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <NavItem to="/" label="Task Board" />
-          <NavItem to="/" label="Job Lisitng" />
-          <NavItem to="/" label="test@test.com" />
+          <div className="hidden sm:flex">
+            <NavItem to="/" label="Task Board" />
+            <NavItem to="/" label="Job Lisitng" />
+            <NavItem to="/" label="test@test.com" />
+          </div>
+          <div className="block sm:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu />
+                  <span className="sr-only">Toggle Theme</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <NavItem to="/" label="Task Board" />
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <NavItem to="/" label="Job Lisitng" />
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <NavItem to="/" label="test@test.com" />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </nav>
