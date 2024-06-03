@@ -1,6 +1,7 @@
 import Child from "./Components/Child";
 import ChildReducerExample from "./Components/ChildReducerExample";
 import CustomButton from "./Components/CustomButton";
+import ZodLearn from "./Components/ZodLearn";
 
 function App() {
   return (
@@ -11,6 +12,11 @@ function App() {
         <CustomButton>My Button</CustomButton>
         <ChildReducerExample />
       </Child>
+      <br />
+      <br />
+      <br />
+      <br />
+      <ZodLearn />
     </>
   );
 }
