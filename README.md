@@ -41,6 +41,71 @@ We can use Suspense for contents which takes some time to load. It has a attribu
 
 If we have multiple async components in a single suspense block it will wait for all the components to load then it will render the components. Ex if we have ComponentA and ComponentB in a single suspense block. ComponentA takes 1s to load and ComponentB takes 5s to load. Suspense will wait for complete 5s and then render both the components. We can counter this by wrapping the components in different Suspense block
 
+## How to make child component for React Suspense which waits for data
+
+The Suspense expects any async child to throw a promise.then.
+Once this promise resolves/rejects Suspense will recall the child component an render the component.
+
+```JSX
+const data = new Promise((resolve) => {
+  setTimeout(() => {
+    resolve("resolved");
+  }, 3000);
+});
+
+let resultData;
+let firstRender = { value: true };
+let completed = false;
+
+const PokeBanner = ({ pokemon = 6 }) => {
+  const mySlowFunction = () => {
+    if (firstRender.value) {
+      firstRender.value = false;
+      throw data.then((result) => {
+        resultData = result;
+        completed = true;
+      });
+    } else {
+      if (completed) {
+        return resultData;
+      }
+    }
+  };
+
+  const getData = mySlowFunction();
+
+  return <div>{getData}</div>;
+};
+```
+
+If the above component is wrapped in Suspese the following steps will happen.
+
+1. Child component runs and the mySlowFunction() executes and as it is a first render it throws the promise with then. Suspense will stop executing rest of the code and show fallback content.
+2. When the Promise resolves, Suspense runs the child component again but now te getData has the data in resolve, and the rest of the flow follows
+
+ToNote: We have to make use the promise is created once, if it gets created inside component, the promise will create again when the prev promise resolves and the component will fall into an endless loop.
+
+Once a promise starts with some async work it js will keep track of the state of promise in the same promise object, this helps us achieve the above concept.
+
+```JSX
+let myPromise = new Promise((resolve) => {
+  setTimeout(() => {
+    resolve("done");
+  }, 3000);
+});
+
+myPromise.then((result) => console.log(result));
+
+setInterval(() => {
+  console.log(myPromise);
+}, 1000);
+
+// Output ---
+// Promise {<pending>}
+// Promise {<pending>}
+// Promise {<fulfilled>: 'done'}
+```
+
 ## Suspense with react router
 
 We can use the defer function present in react router and use it in the loader function. It expects an object with a property and value should be a promise. We can then wrap our component in Suspense to work like following
