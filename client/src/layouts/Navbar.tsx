@@ -16,7 +16,6 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const { theme, setTheme, setSystemTheme } = useContext(Context);
   const { user, logout } = useAuth();
-  console.log(user);
   return (
     <nav className="sticky top-0 z-10 border-b p-4 bg-white dark:bg-slate-950">
       <div className="container flex items-center justify-between gap-4">

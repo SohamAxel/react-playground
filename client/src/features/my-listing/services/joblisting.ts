@@ -1,10 +1,18 @@
 import { baseApi } from "@/services/baseapi";
 import { Job } from "../constants/types";
 
-export const getMyListing = () => {
-  return baseApi.get<Job[]>("/job-listings/my-listing").then((res) => res.data);
+type completeJob = Job & {
+  id: React.Key;
+};
+
+export const getMyLists = () => {
+  return baseApi
+    .get<completeJob[]>("/job-listings/my-listings")
+    .then((res) => res.data);
 };
 
 export const saveMyList = (job: Job) => {
-  return baseApi.post<Job>("/job-listings", { ...job }).then((res) => res.data);
+  return baseApi
+    .post<completeJob>("/job-listings", { ...job })
+    .then((res) => res.data);
 };

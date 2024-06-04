@@ -5,7 +5,7 @@ import { TaskListPage } from "@/pages/tasks/TaskListPage";
 import { NewTaskPage } from "@/pages/tasks/NewTaskPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { AuthLayout, LoginForm, SignupForm } from "./features/user-login";
-import MyJobLisiting from "./pages/mylisting/MyJobLisitPage";
+import { myJobListPageRoute } from "./pages/mylisting/MyJobLisitPage";
 import JobListLayout from "./layouts/JobListLayout";
 import MyNewJobPage from "./pages/mylisting/MyNewJobPage";
 
@@ -39,7 +39,7 @@ export const routes: RouteObject[] = [
             path: "my-listing",
             element: <JobListLayout />,
             children: [
-              { index: true, element: <MyJobLisiting /> },
+              { index: true, ...myJobListPageRoute },
               { path: "new", element: <MyNewJobPage /> },
             ],
           },
