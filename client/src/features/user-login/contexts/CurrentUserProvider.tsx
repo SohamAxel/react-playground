@@ -1,5 +1,5 @@
 import { User } from "@/features/user-login/constants/types";
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import {
   signup as signUpServer,
   login as loginServer,
@@ -12,7 +12,6 @@ type CurrentUserContext = {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  getSession: () => Promise<void>;
   isLoggedIn: boolean;
   isLoadingUser: boolean;
   user?: User;
@@ -28,6 +27,17 @@ export const CurrentUserProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  useEffect(() => {
+    setIsLoadingUser(true);
+    getSession()
+      .then((user) => {
+        setCurrentUser(user);
+      })
+      .finally(() => {
+        setIsLoadingUser(false);
+      });
+  }, []);
+
   const signup = (email: string, password: string) => {
     return signUpServer(email, password).then((user) => {
       setCurrentUser(user);
@@ -36,9 +46,7 @@ export const CurrentUserProvider = ({ children }: { children: ReactNode }) => {
   };
   const login = (email: string, password: string) => {
     return loginServer(email, password).then((user) => {
-      console.log(user);
       setCurrentUser(user);
-      console.log("logged in");
       navigate("/");
     });
   };
@@ -48,14 +56,6 @@ export const CurrentUserProvider = ({ children }: { children: ReactNode }) => {
       navigate(location.state?.login ?? "/");
     });
   };
-  const getCurrentUserSession = () => {
-    setIsLoadingUser(true);
-    return getSession().then((user) => {
-      setCurrentUser(user);
-      navigate(location.state?.login ?? "/");
-      setIsLoadingUser(false);
-    });
-  };
 
   return (
     <CurrentUserContext.Provider
@@ -63,7 +63,6 @@ export const CurrentUserProvider = ({ children }: { children: ReactNode }) => {
         signup,
         login,
         logout,
-        getSession: getCurrentUserSession,
         isLoggedIn: currentUser != null,
         isLoadingUser,
         user: currentUser,

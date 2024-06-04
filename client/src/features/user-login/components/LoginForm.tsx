@@ -38,9 +38,7 @@ export const LoginForm = () => {
   const { login } = useAuth();
 
   const onSubmit = async (data: formSchema) => {
-    console.log(data);
     await login(data.email, data.password).catch((error) => {
-      console.log(error);
       if (
         error instanceof AxiosError ||
         error.response?.data?.message != null

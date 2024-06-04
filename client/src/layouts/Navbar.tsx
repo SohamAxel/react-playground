@@ -7,14 +7,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Context } from "@/contexts/ThemeProvider";
 import { useAuth } from "@/features/user-login/hooks/useAuth";
-import { Menu, Sun } from "lucide-react";
+import { DropdownMenuSub } from "@radix-ui/react-dropdown-menu";
+import { ArrowBigDown, ChevronDown, Menu, Sun } from "lucide-react";
 import { Moon } from "lucide-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { theme, setTheme, setSystemTheme } = useContext(Context);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   console.log(user);
   return (
     <nav className="sticky top-0 z-10 border-b p-4 bg-white dark:bg-slate-950">
@@ -45,8 +46,19 @@ const Navbar = () => {
           <div className="hidden sm:flex">
             <NavItem to="/" label="Task Board" />
             <NavItem to="/" label="Job Lisitng" />
-            {user !== undefined ? (
-              <NavItem to="/" label={user.email} />
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost">
+                    {user.email}
+                    <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>MyListing</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <NavItem to="/login" label="Login" />
             )}
@@ -69,6 +81,22 @@ const Navbar = () => {
                 <DropdownMenuItem>
                   <NavItem to="/" label="test@test.com" />
                 </DropdownMenuItem>
+                {user && (
+                  <DropdownMenuSub>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost">
+                        {user.email}
+                        <ChevronDown />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent asChild align="end">
+                      <DropdownMenuItem>MyListing</DropdownMenuItem>
+                      <DropdownMenuItem onClick={logout}>
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenuSub>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
