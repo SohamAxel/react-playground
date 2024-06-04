@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import Navbar from "./Navbar";
 import ThemeProvider from "@/contexts/ThemeProvider";
-import CurrentUserProvider from "@/contexts/CurrentUserProvider";
+import { CurrentUserProvider } from "@/features/user-login";
 
 export function RootLayout() {
   return (

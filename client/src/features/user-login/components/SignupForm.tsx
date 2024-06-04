@@ -22,6 +22,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { AxiosError } from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 type SignupValues = z.infer<typeof formSchema>;
 
@@ -35,14 +37,25 @@ const formSchema = signupSchema
   });
 
 export const SignupForm = () => {
-  console.log(signupSchema);
   const form = useForm<SignupValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      email: "",
+      password: "",
+      passwordConfirmation: "",
+    },
   });
+  const { signup } = useAuth();
 
-  const onSubmit = (data: SignupValues) => {
-    console.log(data);
+  const onSubmit = async (data: SignupValues) => {
+    await signup(data.email, data.password).catch((error) => {
+      if (
+        error instanceof AxiosError &&
+        error.response?.data?.message != null
+      ) {
+        form.setError("root", { message: error.response.data.message });
+      }
+    });
   };
 
   return (

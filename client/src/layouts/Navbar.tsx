@@ -5,9 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { Context } from "@/contexts/ThemeProvider";
-import LoginButton from "@/features/user-login/components/LoginButton";
 import { Menu, Sun } from "lucide-react";
 import { Moon } from "lucide-react";
 import { useContext } from "react";
@@ -15,7 +13,6 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { theme, setTheme, setSystemTheme } = useContext(Context);
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   return (
     <nav className="sticky top-0 z-10 border-b p-4 bg-white dark:bg-slate-950">
@@ -46,11 +43,7 @@ const Navbar = () => {
           <div className="hidden sm:flex">
             <NavItem to="/" label="Task Board" />
             <NavItem to="/" label="Job Lisitng" />
-            {currentUser.name === "Anonymous" ? (
-              <NavItem to="/login" label="Login" />
-            ) : (
-              <NavItem to="/" label="test@test.com" />
-            )}
+            <NavItem to="/login" label="Login" />
           </div>
           <div className="block sm:hidden">
             <DropdownMenu>
