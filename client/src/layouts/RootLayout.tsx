@@ -3,8 +3,16 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 import Navbar from "./Navbar";
 import ThemeProvider from "@/contexts/ThemeProvider";
 import { CurrentUserProvider } from "@/features/user-login";
+import { useAuth } from "@/features/user-login/hooks/useAuth";
+import { useEffect } from "react";
 
 export function RootLayout() {
+  // const { getSession, isLoadingUser } = useAuth();
+
+  // useEffect(() => {
+  //   getSession();
+  // });
+
   return (
     <ThemeProvider>
       <CurrentUserProvider>

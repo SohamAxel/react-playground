@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -20,17 +21,33 @@ import { Link } from "react-router-dom";
 import { signupSchema } from "@backend/constants/schemas/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { AxiosError } from "axios";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useAuth } from "../hooks/useAuth";
 
 type formSchema = z.infer<typeof signupSchema>;
 
 export const LoginForm = () => {
   const form = useForm<formSchema>({
     resolver: zodResolver(signupSchema),
-    defaultValues: {},
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
+  const { login } = useAuth();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data: formSchema) => {
     console.log(data);
+    await login(data.email, data.password).catch((error) => {
+      console.log(error);
+      if (
+        error instanceof AxiosError ||
+        error.response?.data?.message != null
+      ) {
+        form.setError("root", { message: error.response.data.message });
+      }
+    });
   };
 
   return (
@@ -39,6 +56,11 @@ export const LoginForm = () => {
         <Card className="w-[400px]">
           <CardHeader>
             <CardTitle>Login</CardTitle>
+            {form.formState.errors.root?.message && (
+              <CardDescription className="text-red-500 dark:text-red-900">
+                {form.formState.errors.root.message}
+              </CardDescription>
+            )}
           </CardHeader>
           <CardContent className="flex flex-col w-full gap-4">
             <FormField
@@ -83,7 +105,7 @@ export const LoginForm = () => {
                   !form.formState.isValid || form.formState.isSubmitting
                 }
               >
-                Login
+                {form.formState.isSubmitting ? <LoadingSpinner /> : "Login"}
               </Button>
             </div>
           </CardFooter>
