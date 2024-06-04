@@ -47,7 +47,7 @@ export const CurrentUserProvider = ({ children }: { children: ReactNode }) => {
   const login = (email: string, password: string) => {
     return loginServer(email, password).then((user) => {
       setCurrentUser(user);
-      navigate("/");
+      navigate(location.state?.location ?? "/");
     });
   };
   const logout = () => {

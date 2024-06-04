@@ -5,6 +5,9 @@ import { TaskListPage } from "@/pages/tasks/TaskListPage";
 import { NewTaskPage } from "@/pages/tasks/NewTaskPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { AuthLayout, LoginForm, SignupForm } from "./features/user-login";
+import MyJobLisiting from "./pages/mylisting/MyJobLisitPage";
+import JobListLayout from "./layouts/JobListLayout";
+import MyNewJobPage from "./pages/mylisting/MyNewJobPage";
 
 export const routes: RouteObject[] = [
   {
@@ -30,6 +33,14 @@ export const routes: RouteObject[] = [
             children: [
               { path: "login", element: <LoginForm /> },
               { path: "signup", element: <SignupForm /> },
+            ],
+          },
+          {
+            path: "my-listing",
+            element: <JobListLayout />,
+            children: [
+              { index: true, element: <MyJobLisiting /> },
+              { path: "new", element: <MyNewJobPage /> },
             ],
           },
           { path: "*", element: <NotFoundPage /> },

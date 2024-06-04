@@ -55,7 +55,9 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>MyListing</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <NavItem to="/my-listing" label="MyListing" />
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
