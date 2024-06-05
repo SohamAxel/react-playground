@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/ui/PageHeader";
 import { MyNewJobForm } from "@/features/my-listing";
 import { Job } from "@/features/my-listing/constants/types";
 import { saveMyList } from "@/features/my-listing/services/joblisting";
@@ -13,6 +14,7 @@ const MyNewJobPage = () => {
   };
   return (
     <div>
+      <PageHeader>New Listing</PageHeader>
       <MyNewJobForm onSubmit={submitNewJob} />
     </div>
   );

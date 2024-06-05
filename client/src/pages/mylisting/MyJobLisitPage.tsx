@@ -1,3 +1,4 @@
+import { PrivatePage } from "@/components/routing/PrivatePage";
 import { Button } from "@/components/ui/button";
 import {
   JobListCard,
@@ -61,6 +62,10 @@ export const loader = deferredLoader(() => {
 });
 
 export const myJobListPageRoute = {
-  element: <MyJobListPage />,
+  element: (
+    <PrivatePage>
+      <MyJobListPage />
+    </PrivatePage>
+  ),
   loader,
 };

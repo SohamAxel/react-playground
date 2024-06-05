@@ -34,9 +34,10 @@ import {
 } from "@backend/constants/types";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { HTMLInputTypeAttribute } from "react";
+import { HTMLInputTypeAttribute, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useJobList } from "../hooks/useJobList";
+import { JobListCard } from "./JobListCard";
 
 type Job = z.infer<typeof jobListingFormSchema>;
 
@@ -65,89 +66,104 @@ const MyNewJobForm = ({
     resolver: zodResolver(jobListingFormSchema),
     defaultValues: initial_values,
   });
-
+  const [isShowPreview, setShowPreview] = useState(false);
+  const jobListingValues = form.watch();
   const handleFormSubmit = (data: Job) => {
     onSubmit(data);
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-        <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
-          <TextFormField
-            control={form.control}
-            label="Title"
-            name="title"
-            className="w-full"
-          />
-          <TextFormField
-            control={form.control}
-            label="Company Name"
-            name="companyName"
-            className="w-full"
-          />
-          <TextFormField
-            control={form.control}
-            label="Location"
-            name="location"
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
-          <TextFormField
-            control={form.control}
-            label="Application URL"
-            name="applyUrl"
-            className="w-full"
-          />
-          <SelectFormField
-            control={form.control}
-            name="type"
-            label="Type"
-            className="w-full"
-            options={JOB_LISTING_TYPES}
-          />
-          <SelectFormField
-            control={form.control}
-            name="experienceLevel"
-            label="Experience Level"
-            className="w-full"
-            options={JOB_LISTING_EXPERIENCE_LEVELS}
-          />
-        </div>
-        <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
-          <TextFormField
-            control={form.control}
-            label="Salary"
-            name="salary"
-            type="number"
-            className="w-full sm:w-1/3"
-          />
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleFormSubmit)}>
+          <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
+            <TextFormField
+              control={form.control}
+              label="Title"
+              name="title"
+              className="w-full"
+            />
+            <TextFormField
+              control={form.control}
+              label="Company Name"
+              name="companyName"
+              className="w-full"
+            />
+            <TextFormField
+              control={form.control}
+              label="Location"
+              name="location"
+              className="w-full"
+            />
+          </div>
+          <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
+            <TextFormField
+              control={form.control}
+              label="Application URL"
+              name="applyUrl"
+              className="w-full"
+            />
+            <SelectFormField
+              control={form.control}
+              name="type"
+              label="Type"
+              className="w-full"
+              options={JOB_LISTING_TYPES}
+            />
+            <SelectFormField
+              control={form.control}
+              name="experienceLevel"
+              label="Experience Level"
+              className="w-full"
+              options={JOB_LISTING_EXPERIENCE_LEVELS}
+            />
+          </div>
+          <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
+            <TextFormField
+              control={form.control}
+              label="Salary"
+              name="salary"
+              type="number"
+              className="w-full sm:w-1/3"
+            />
+            <TextAreaFormField
+              control={form.control}
+              label="Short Description"
+              name="shortDescription"
+              className="w-full sm:w-2/3"
+              description="Max 200 characters"
+            />
+          </div>
           <TextAreaFormField
             control={form.control}
-            label="Short Description"
-            name="shortDescription"
-            className="w-full sm:w-2/3"
-            description="Max 200 characters"
+            label="Full Description"
+            name="description"
+            className="w-full"
+            description="Supports full Markdown"
           />
+          <div id="action-buttons" className="flex justify-end gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowPreview((d) => !d)}
+            >
+              {isShowPreview ? "Hide Preview" : "Show Preview"}
+            </Button>
+            <Button
+              type="submit"
+              disabled={!form.formState.isValid || form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? <LoadingSpinner /> : "Save"}
+            </Button>
+          </div>
+        </form>
+      </Form>
+      {isShowPreview && (
+        <div className="grid grid-cols-3">
+          <JobListCard job={jobListingValues} />
         </div>
-        <TextAreaFormField
-          control={form.control}
-          label="Full Description"
-          name="description"
-          className="w-full"
-          description="Supports full Markdown"
-        />
-        <div id="action-buttons" className="flex justify-end gap-4">
-          <Button variant="outline">Show Preview</Button>
-          <Button
-            disabled={!form.formState.isValid || form.formState.isSubmitting}
-          >
-            {form.formState.isSubmitting ? <LoadingSpinner /> : "Save"}
-          </Button>
-        </div>
-      </form>
-    </Form>
+      )}
+    </>
   );
 };
 

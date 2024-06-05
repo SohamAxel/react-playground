@@ -27,8 +27,8 @@ import { useState } from "react";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 type JobListCard = {
-  job: Job;
-  deleteJob: (id: Job["id"]) => void;
+  job: Omit<Job, "id"> & { id?: string };
+  deleteJob?: (id: Job["id"]) => void;
 };
 
 const JobListCard = ({ job, deleteJob }: JobListCard) => {
@@ -49,14 +49,19 @@ const JobListCard = ({ job, deleteJob }: JobListCard) => {
       </CardHeader>
       <CardContent>{job.shortDescription}</CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button variant="outline" asChild>
-          <Link to={`/my-listing/edit/${job.id}`}>Edit</Link>
-        </Button>
-        <DeleteJobListingDialog
-          deleteListing={() => {
-            deleteJob(job.id);
-          }}
-        />
+        {/* @TODO: Explanation */}
+        {(job.id !== undefined || deleteJob !== undefined) && (
+          <>
+            <Button variant="outline" asChild>
+              <Link to={`/my-listing/edit/${job.id}`}>Edit</Link>
+            </Button>
+            <DeleteJobListingDialog
+              deleteListing={() => {
+                deleteJob(job.id);
+              }}
+            />
+          </>
+        )}
         <Button>Publish</Button>
       </CardFooter>
     </Card>

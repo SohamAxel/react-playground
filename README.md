@@ -140,3 +140,4 @@ Project used the following external libraries
 
 Created a lib called reactRouter to handle react router loader related type safety
 Adding type safety to Promises
+How to create private page

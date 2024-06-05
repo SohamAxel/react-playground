@@ -1,6 +1,9 @@
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { MyNewJobForm, editMyList, getJobData } from "@/features/my-listing";
 import { Job } from "@/features/my-listing/constants/types";
+import { PrivatePage } from "@/components/routing/PrivatePage";
+
 import {
   Await,
   deferredLoader,
@@ -21,6 +24,7 @@ const MyJobListEditPage = () => {
 
   return (
     <div>
+      <PageHeader>Edit Listing</PageHeader>
       <Suspense fallback={<LoadingSpinner />}>
         <Await resolve={dataPromise}>
           {(data) => (
@@ -39,7 +43,11 @@ const loader = deferredLoader(({ params: { id } }) => {
 
 const myJobListEditPageRoute = {
   loader,
-  element: <MyJobListEditPage />,
+  element: (
+    <PrivatePage>
+      <MyJobListEditPage />
+    </PrivatePage>
+  ),
 };
 
 export { myJobListEditPageRoute };
