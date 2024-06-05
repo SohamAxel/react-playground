@@ -225,7 +225,7 @@ function TextFormField<T extends FieldValues>({
       render={({ field }: { field: ControllerRenderProps<T> }) => (
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
-          {name == "number" ? (
+          {type == "number" ? (
             <Input
               type="number"
               {...field}

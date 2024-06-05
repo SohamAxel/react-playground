@@ -16,7 +16,5 @@ export const saveMyList = (job: Job) => {
 };
 
 export const deleteListing = (id: Job["id"]) => {
-  return baseApi
-    .delete(`/job-listings/${id}`)
-    .then((res) => jobListingFormSchema.parseAsync(res.data));
+  return baseApi.delete(`/job-listings/${id}`).then((res) => res.data);
 };

@@ -23,12 +23,16 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { deleteListing } from "../services/joblisting";
+import { useState } from "react";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 type JobListCard = {
   job: Job;
+  deleteJob: (id: Job["id"]) => void;
 };
 
-const JobListCard = ({ job }: JobListCard) => {
+const JobListCard = ({ job, deleteJob }: JobListCard) => {
+  const [isDeleting, setIsDeleting] = useState(false);
   return (
     <Card className="w-full">
       <CardHeader>
@@ -50,7 +54,7 @@ const JobListCard = ({ job }: JobListCard) => {
         </Button>
         <DeleteJobListingDialog
           deleteListing={() => {
-            deleteListing(job.id);
+            deleteJob(job.id);
           }}
         />
         <Button>Publish</Button>
@@ -99,14 +103,14 @@ const JobListCardSkeleton = () => {
         <CardTitle>
           <Skeleton className="h-7 w-[200px]" />
         </CardTitle>
-        <CardDescription className="flex flex-col gap-1">
+        <section className="flex flex-col gap-1">
           <span>
             <Skeleton className="h-2 w-[100px]" />
           </span>
           <span>
             <Skeleton className="h-2 w-[100px]" />
           </span>
-        </CardDescription>
+        </section>
         <section className="">
           <Badge variant="secondary">
             <Skeleton className="h-4 w-[50px]" />

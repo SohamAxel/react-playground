@@ -4,6 +4,7 @@ import {
   JobListCardSkeleton,
   getMyLists,
 } from "@/features/my-listing";
+import JobListCardGrid from "@/features/my-listing/components/JobListCardGrid";
 import { Job } from "@/features/my-listing/constants/types";
 import {
   Await,
@@ -11,16 +12,14 @@ import {
   useDeferredLoaderData,
 } from "@/lib/reactRouter";
 import { Fragment, Suspense } from "react";
-import { Link, defer, useLoaderData } from "react-router-dom";
-
-type completeJob = Job & {
-  id: React.Key;
-};
+import { Link, useLoaderData } from "react-router-dom";
 
 const MyJobListPage = () => {
   const { dataPromise } = useDeferredLoaderData<typeof loader>();
   // @TODO: Check with vivek
-  // const { dataPromise }: { dataPromise: completeJob[] } = useLoaderData();
+  // const { dataPromise }: { dataPromise: Job[] } = useLoaderData();
+  // const { dataPromise } = useLoaderData() as { dataPromise: Job };
+
   return (
     <>
       <section className="flex justify-between gap-4">
@@ -32,13 +31,7 @@ const MyJobListPage = () => {
       <section className="grid grid-cols-3 gap-4 mt-5">
         <Suspense fallback={<PageSkeleton limit={10} />}>
           <Await resolve={dataPromise}>
-            {(data) => {
-              return data.map((job) => (
-                <Fragment key={job.id}>
-                  <JobListCard job={job} />
-                </Fragment>
-              ));
-            }}
+            {(data) => <JobListCardGrid jobList={data} />}
           </Await>
         </Suspense>
       </section>
