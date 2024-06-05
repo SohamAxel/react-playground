@@ -40,32 +40,39 @@ import { useJobList } from "../hooks/useJobList";
 
 type Job = z.infer<typeof jobListingFormSchema>;
 
-const MyNewJobForm = () => {
+type MyNewJobFormProps = {
+  onSubmit: (job: Job) => void;
+  initial_values?: Job;
+};
+
+const DEFAULT_VALUES = {
+  title: "",
+  companyName: "",
+  location: "",
+  applyUrl: "",
+  salary: NaN,
+  type: JOB_LISTING_TYPES[1],
+  experienceLevel: JOB_LISTING_EXPERIENCE_LEVELS[1],
+  shortDescription: "",
+  description: "",
+};
+
+const MyNewJobForm = ({
+  onSubmit,
+  initial_values = DEFAULT_VALUES,
+}: MyNewJobFormProps) => {
   const form = useForm<Job>({
     resolver: zodResolver(jobListingFormSchema),
-    defaultValues: {
-      title: "",
-      companyName: "",
-      location: "",
-      applyUrl: "",
-      salary: NaN,
-      type: JOB_LISTING_TYPES[1],
-      experienceLevel: JOB_LISTING_EXPERIENCE_LEVELS[1],
-      shortDescription: "",
-      description: "",
-    },
+    defaultValues: initial_values,
   });
-  const { saveJob } = useJobList();
 
-  const onSubmit = async (data: Job) => {
-    await saveJob(data).catch((error) => {
-      console.log(error);
-    });
+  const handleFormSubmit = (data: Job) => {
+    onSubmit(data);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(handleFormSubmit)}>
         <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
           <TextFormField
             control={form.control}

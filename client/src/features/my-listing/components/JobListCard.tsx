@@ -50,7 +50,7 @@ const JobListCard = ({ job, deleteJob }: JobListCard) => {
       <CardContent>{job.shortDescription}</CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Button variant="outline" asChild>
-          <Link to="/">Edit</Link>
+          <Link to={`/my-listing/edit/${job.id}`}>Edit</Link>
         </Button>
         <DeleteJobListingDialog
           deleteListing={() => {

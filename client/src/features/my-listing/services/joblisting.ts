@@ -9,9 +9,20 @@ export const getMyLists = () => {
     .then((res) => z.array(jobListingFormSchema).parseAsync(res.data));
 };
 
-export const saveMyList = (job: Job) => {
+export const saveMyList = (job: Omit<Job, "id">) => {
   return baseApi
     .post("/job-listings", { ...job })
+    .then((res) => jobListingFormSchema.parseAsync(res.data));
+};
+
+export const editMyList = (job: Omit<Job, "id">, id: Job["id"]) => {
+  return baseApi
+    .put(`/job-listings/${id}`, { ...job })
+    .then((res) => jobListingFormSchema.parseAsync(res.data));
+};
+export const getJobData = (id: Job["id"]) => {
+  return baseApi
+    .get(`/job-listings/${id}`)
     .then((res) => jobListingFormSchema.parseAsync(res.data));
 };
 
