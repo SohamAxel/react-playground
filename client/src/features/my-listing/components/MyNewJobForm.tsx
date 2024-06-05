@@ -160,7 +160,10 @@ const MyNewJobForm = ({
       </Form>
       {isShowPreview && (
         <div className="grid grid-cols-3">
-          <JobListCard job={jobListingValues} />
+          <JobListCard
+            job={jobListingValues}
+            footerBtns={<Button>View More</Button>}
+          />
         </div>
       )}
     </>

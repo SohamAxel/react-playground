@@ -137,7 +137,8 @@ Project used the following external libraries
 1. react-hook-form
 2. zod
 3. shdcdn
+4. date-fns
 
-Created a lib called reactRouter to handle react router loader related type safety
-Adding type safety to Promises
-How to create private page
+a. Created a lib called reactRouter to handle react router loader related type safety
+b. Adding type safety to Promises
+c. How to create private page

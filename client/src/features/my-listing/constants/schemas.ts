@@ -15,4 +15,5 @@ export const jobListingFormSchema = z.object({
   salary: z.number().int().positive(),
   shortDescription: z.string().max(200),
   description: z.string(),
+  expiresAt: z.date().nullable(),
 });

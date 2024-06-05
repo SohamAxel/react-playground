@@ -11,27 +11,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+
 import { deleteListing } from "../services/joblisting";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 type JobListCard = {
   job: Omit<Job, "id"> & { id?: string };
-  deleteJob?: (id: Job["id"]) => void;
+  footerBtns: ReactNode;
 };
 
-const JobListCard = ({ job, deleteJob }: JobListCard) => {
+const JobListCard = ({ job, footerBtns }: JobListCard) => {
   const [isDeleting, setIsDeleting] = useState(false);
   return (
     <Card className="w-full">
@@ -49,8 +39,9 @@ const JobListCard = ({ job, deleteJob }: JobListCard) => {
       </CardHeader>
       <CardContent>{job.shortDescription}</CardContent>
       <CardFooter className="flex justify-end gap-2">
+        {footerBtns}
         {/* @TODO: Explanation */}
-        {(job.id !== undefined || deleteJob !== undefined) && (
+        {/* {(job.id !== undefined || deleteJob !== undefined) && (
           <>
             <Button variant="outline" asChild>
               <Link to={`/my-listing/edit/${job.id}`}>Edit</Link>
@@ -60,44 +51,10 @@ const JobListCard = ({ job, deleteJob }: JobListCard) => {
                 deleteJob(job.id);
               }}
             />
-          </>
-        )}
-        <Button>Publish</Button>
+          </> */}
+        {/* <Button>Publish</Button> */}
       </CardFooter>
     </Card>
-  );
-};
-
-type DeleteJobListingDialogProps = {
-  deleteListing: () => void;
-};
-
-const DeleteJobListingDialog = ({
-  deleteListing,
-}: DeleteJobListingDialogProps) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="ghost">Delete</Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            Are you sure you want to delete this job listing?
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your job
-            lisitng and any remaining tume will not be refunded.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={deleteListing}>
-            Continue
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 };
 
