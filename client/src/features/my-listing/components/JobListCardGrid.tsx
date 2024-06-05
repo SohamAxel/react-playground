@@ -1,7 +1,10 @@
 import { ComponentProps, Fragment, useMemo, useState } from "react";
 import { Job } from "../constants/types";
 import { JobListCard } from "./JobListCard";
-import { deleteListing } from "../services/joblisting";
+import {
+  createPublishPaymentIntent,
+  deleteListing,
+} from "../services/joblisting";
 import { toast } from "@/components/ui/use-toast";
 import {
   AlertDialog,
@@ -35,6 +38,9 @@ import { formatDistanceStrict, isAfter } from "date-fns";
 import { z } from "zod";
 import { jobListingFormSchema } from "../constants/schemas";
 import { Badge } from "@/components/ui/badge";
+import { Elements } from "@stripe/react-stripe-js";
+import { stripePromise } from "@/lib/stripe";
+import JobListCheckoutForm from "./JobListCheckoutForm";
 
 type JobListCardGridProps = {
   jobList: z.infer<typeof jobListingFormSchema>[];
@@ -46,6 +52,8 @@ const JobListCardGrid = ({ jobList }: JobListCardGridProps) => {
     () => jobList.filter((job) => !deletedJobList.includes(job.id)),
     [jobList, deletedJobList]
   );
+
+  const [clientSecret, setClientSecret] = useState<string>();
   const [duration, setDuration] =
     useState<(typeof JOB_LISTING_DURATIONS)[number]>();
 
@@ -109,6 +117,21 @@ const JobListCardGrid = ({ jobList }: JobListCardGridProps) => {
                   <DialogDescription>
                     This is a non refundable process.
                   </DialogDescription>
+                  {clientSecret && duration && (
+                    <Elements
+                      options={{
+                        clientSecret,
+                        appearance: {
+                          theme: "stripe",
+                        },
+                      }}
+                      stripe={stripePromise}
+                    >
+                      <JobListCheckoutForm
+                        amount={getJobListingPriceInCents(duration) / 100}
+                      />
+                    </Elements>
+                  )}
                 </DialogContent>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -117,8 +140,13 @@ const JobListCardGrid = ({ jobList }: JobListCardGridProps) => {
                   <DropdownMenuContent align="end">
                     {JOB_LISTING_DURATIONS.map((duration) => (
                       <DropdownMenuItem
-                        onClick={() => {
+                        key={duration}
+                        onClick={async () => {
                           setDuration(duration);
+                          const { clientSecret } =
+                            await createPublishPaymentIntent(job.id, duration);
+                          // console.log(clientSecret);
+                          setClientSecret(clientSecret);
                         }}
                       >
                         {duration} Days -
