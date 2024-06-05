@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { jobListingFormSchema } from "@backend/constants/schemas/jobListings";
 import {
   Control,
+  ControllerRenderProps,
   FieldValues,
   Path,
   PathValue,
@@ -34,24 +35,20 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { HTMLInputTypeAttribute } from "react";
-import { saveMyList } from "../services/joblisting";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useJobList } from "../hooks/useJobList";
 
-const jobSchema = jobListingFormSchema.omit({ salary: true }).extend({
-  salary: z.coerce.number(),
-});
-type Job = z.infer<typeof jobSchema>;
+type Job = z.infer<typeof jobListingFormSchema>;
 
 const MyNewJobForm = () => {
   const form = useForm<Job>({
-    resolver: zodResolver(jobSchema),
+    resolver: zodResolver(jobListingFormSchema),
     defaultValues: {
       title: "",
       companyName: "",
       location: "",
       applyUrl: "",
-      salary: 0,
+      salary: NaN,
       type: JOB_LISTING_TYPES[1],
       experienceLevel: JOB_LISTING_EXPERIENCE_LEVELS[1],
       shortDescription: "",
@@ -69,7 +66,7 @@ const MyNewJobForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex justify-evenly w-full gap-4">
+        <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
           <TextFormField
             control={form.control}
             label="Title"
@@ -89,7 +86,7 @@ const MyNewJobForm = () => {
             className="w-full"
           />
         </div>
-        <div className="flex justify-evenly w-full gap-4">
+        <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
           <TextFormField
             control={form.control}
             label="Application URL"
@@ -111,19 +108,19 @@ const MyNewJobForm = () => {
             options={JOB_LISTING_EXPERIENCE_LEVELS}
           />
         </div>
-        <div className="flex justify-evenly w-full gap-4">
+        <div className="flex flex-col sm:flex-row justify-evenly w-full gap-4">
           <TextFormField
             control={form.control}
             label="Salary"
             name="salary"
             type="number"
-            className="w-1/3"
+            className="w-full sm:w-1/3"
           />
           <TextAreaFormField
             control={form.control}
             label="Short Description"
             name="shortDescription"
-            className="w-2/3"
+            className="w-full sm:w-2/3"
             description="Max 200 characters"
           />
         </div>
@@ -212,6 +209,8 @@ function SelectFormField<T extends FieldValues>({
     />
   );
 }
+
+// @TODO: Need help with resolving the type script
 function TextFormField<T extends FieldValues>({
   label,
   control,
@@ -223,10 +222,21 @@ function TextFormField<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field }: { field: ControllerRenderProps<T> }) => (
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
-          <Input type={type ?? "text"} {...field} />
+          {name == "number" ? (
+            <Input
+              type="number"
+              {...field}
+              onChange={(e) =>
+                field.onChange(e.target.valueAsNumber as PathValue<T, Path<T>>)
+              }
+              value={isNaN(field.value) ? "" : field.value}
+            />
+          ) : (
+            <Input {...field} />
+          )}
           <FormMessage />
         </FormItem>
       )}

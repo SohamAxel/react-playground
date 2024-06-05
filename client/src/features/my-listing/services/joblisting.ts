@@ -1,18 +1,22 @@
 import { baseApi } from "@/services/baseapi";
 import { Job } from "../constants/types";
-
-type completeJob = Job & {
-  id: React.Key;
-};
+import { z } from "zod";
+import { jobListingFormSchema } from "../constants/schemas";
 
 export const getMyLists = () => {
   return baseApi
-    .get<completeJob[]>("/job-listings/my-listings")
-    .then((res) => res.data);
+    .get("/job-listings/my-listings")
+    .then((res) => z.array(jobListingFormSchema).parseAsync(res.data));
 };
 
 export const saveMyList = (job: Job) => {
   return baseApi
-    .post<completeJob>("/job-listings", { ...job })
-    .then((res) => res.data);
+    .post("/job-listings", { ...job })
+    .then((res) => jobListingFormSchema.parseAsync(res.data));
+};
+
+export const deleteListing = (id: Job["id"]) => {
+  return baseApi
+    .delete(`/job-listings/${id}`)
+    .then((res) => jobListingFormSchema.parseAsync(res.data));
 };

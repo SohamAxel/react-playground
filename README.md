@@ -128,6 +128,15 @@ The tasks you need to complete are saved as issues on the GitHub repository. The
 4. Job Listing Payments
 5. Job Board/Filtering
 
-react-hook-form
-zod
-shdcdn
+Notes:
+
+Important features of the project
+
+Project used the following external libraries
+
+1. react-hook-form
+2. zod
+3. shdcdn
+
+Created a lib called reactRouter to handle react router loader related type safety
+Adding type safety to Promises
