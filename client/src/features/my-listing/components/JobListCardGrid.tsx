@@ -47,6 +47,7 @@ type JobListCardGridProps = {
 } & ComponentProps<"div">;
 
 const JobListCardGrid = ({ jobList }: JobListCardGridProps) => {
+  console.log(jobList);
   const [deletedJobList, setDeletedJobList] = useState<Job["id"][]>([]);
   const visibleJobList = useMemo(
     () => jobList.filter((job) => !deletedJobList.includes(job.id)),

@@ -44,7 +44,7 @@ const Navbar = () => {
           </DropdownMenu>
           <div className="hidden sm:flex">
             <NavItem to="/" label="Task Board" />
-            <NavItem to="/" label="Job Lisitng" />
+            <NavItem to="/job-list" label="Job Lisitng" />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

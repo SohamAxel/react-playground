@@ -9,6 +9,8 @@ import { myJobListPageRoute } from "./pages/mylisting/MyJobLisitPage";
 import { myJobListEditPageRoute } from "./pages/mylisting/MyJobListEditPage";
 import JobListLayout from "./layouts/JobListLayout";
 import MyNewJobPage from "./pages/mylisting/MyNewJobPage";
+import { orderCompleteRoute } from "./pages/mylisting/order-complete";
+import { publicJobListingPageRoute } from "./pages/joblisting";
 
 export const routes: RouteObject[] = [
   {
@@ -46,7 +48,12 @@ export const routes: RouteObject[] = [
                 path: "edit",
                 children: [{ path: ":id", ...myJobListEditPageRoute }],
               },
+              { path: "order-complete", ...orderCompleteRoute },
             ],
+          },
+          {
+            path: "job-list",
+            ...publicJobListingPageRoute,
           },
           { path: "*", element: <NotFoundPage /> },
         ],

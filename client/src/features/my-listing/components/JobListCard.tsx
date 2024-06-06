@@ -8,25 +8,24 @@ import {
 } from "@/components/ui/card";
 import { Job } from "../constants/types";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
-
-import { deleteListing } from "../services/joblisting";
 import { ReactNode, useState } from "react";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 type JobListCard = {
   job: Omit<Job, "id"> & { id?: string };
-  footerBtns: ReactNode;
+  footerBtns?: ReactNode;
+  headerBtns?: ReactNode;
 };
 
-const JobListCard = ({ job, footerBtns }: JobListCard) => {
+const JobListCard = ({ job, footerBtns, headerBtns }: JobListCard) => {
   const [isDeleting, setIsDeleting] = useState(false);
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{job.title}</CardTitle>
+        <div className="flex gap-2 justify-between">
+          <CardTitle>{job.title}</CardTitle>
+          {headerBtns}
+        </div>
         <CardDescription className="flex flex-col">
           <span>{job.companyName}</span>
           <span>{job.location}</span>
@@ -89,11 +88,6 @@ const JobListCardSkeleton = () => {
         {" "}
         <Skeleton className="h-[125px] w-full rounded-xl" />
       </CardContent>
-      <CardFooter className="flex justify-end gap-2">
-        <Button variant="outline">Delete</Button>
-        <Button variant="outline">Edit</Button>
-        <Button>Publish</Button>
-      </CardFooter>
     </Card>
   );
 };
