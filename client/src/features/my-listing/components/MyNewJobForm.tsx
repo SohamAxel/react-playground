@@ -38,6 +38,7 @@ import { HTMLInputTypeAttribute, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useJobList } from "../hooks/useJobList";
 import { JobListCard } from "./JobListCard";
+import { JobListingFullDialog } from "@/features/joblist/components/JobListViewMoreDialog";
 
 type Job = z.infer<typeof jobListingFormSchema>;
 
@@ -162,7 +163,7 @@ const MyNewJobForm = ({
         <div className="grid grid-cols-3">
           <JobListCard
             job={jobListingValues}
-            footerBtns={<Button>View More</Button>}
+            footerBtns={<JobListingFullDialog jobList={jobListingValues} />}
           />
         </div>
       )}

@@ -3,6 +3,7 @@ import { JobListFilter } from "../constants/types";
 import { useMemo, useState } from "react";
 import { Eye, EyeOff, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { JobListingFullDialog } from "./JobListViewMoreDialog";
 
 type JobListDataProps = {
   jobList: Job[];
@@ -97,6 +98,7 @@ export const JobListData = ({ jobList, jobListFilters }: JobListDataProps) => {
           </Button>
         </div>
       }
+      footerBtns={<JobListingFullDialog jobList={job} />}
     />
   ));
 };
