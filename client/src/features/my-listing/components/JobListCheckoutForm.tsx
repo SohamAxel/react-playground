@@ -4,7 +4,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 
 const JobListCheckoutForm = ({ amount }: { amount: number }) => {
   const stripe = useStripe();

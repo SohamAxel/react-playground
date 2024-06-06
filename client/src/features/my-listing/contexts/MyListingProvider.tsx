@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useState } from "react";
 import { Job } from "../constants/types";
 import { saveMyList } from "../services/joblisting";
 import { useNavigate } from "react-router-dom";

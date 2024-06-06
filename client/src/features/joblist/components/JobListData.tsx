@@ -1,8 +1,7 @@
 import { Job, JobListCard, JobListCardSkeleton } from "@/features/my-listing";
 import { JobListFilter } from "../constants/types";
 import { useMemo, useState } from "react";
-import { filterProps } from "framer-motion";
-import { Eye, EyeOff, Heart, HeartOff } from "lucide-react";
+import { Eye, EyeOff, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type JobListDataProps = {
@@ -51,7 +50,7 @@ export const JobListData = ({ jobList, jobListFilters }: JobListDataProps) => {
     setHiddenJobs((prevHiddenJob) => {
       const index = prevHiddenJob.indexOf(id);
       if (index !== -1) {
-        return prevHiddenJob.filter((element, key) => key != index);
+        return prevHiddenJob.filter((element) => element != id);
       } else {
         return [...prevHiddenJob, id];
       }
@@ -61,7 +60,7 @@ export const JobListData = ({ jobList, jobListFilters }: JobListDataProps) => {
     setFavouriteJobs((prevFavouriteJob) => {
       const index = prevFavouriteJob.indexOf(id);
       if (index !== -1) {
-        return prevFavouriteJob.filter((element, key) => key != index);
+        return prevFavouriteJob.filter((element) => element != id);
       } else {
         return [...prevFavouriteJob, id];
       }
@@ -77,7 +76,7 @@ export const JobListData = ({ jobList, jobListFilters }: JobListDataProps) => {
           <Button
             variant="ghost"
             className="p-1"
-            onClick={(e) => handleHidden(job.id)}
+            onClick={() => handleHidden(job.id)}
           >
             {hiddenJobs.includes(job.id) ? (
               <EyeOff size={18} />
@@ -88,7 +87,7 @@ export const JobListData = ({ jobList, jobListFilters }: JobListDataProps) => {
           <Button
             variant="ghost"
             className="p-1"
-            onClick={(e) => handleFavourite(job.id)}
+            onClick={() => handleFavourite(job.id)}
           >
             {favouriteJobs.includes(job.id) ? (
               <Heart size={18} color="red" />

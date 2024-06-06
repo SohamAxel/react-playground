@@ -1,18 +1,25 @@
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import React, { createContext } from "react";
+import { createContext, ReactNode } from "react";
 
-export const Context = createContext(null);
+type Ttheme = "light" | "dark";
 
+type ContextProvider = {
+  theme: Ttheme;
+  setTheme: (theme: Ttheme) => void;
+  setSystemTheme: () => void;
+};
+
+export const Context = createContext<ContextProvider | null>(null);
 const getSystemTheme = () => {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
 };
 
-const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useLocalStorage("THEME", getSystemTheme);
+const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setTheme] = useLocalStorage<Ttheme>("THEME", getSystemTheme);
 
-  const changeTheme = (theme) => {
+  const changeTheme = (theme: Ttheme) => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     setTheme(theme);
   };
