@@ -29,7 +29,7 @@ How to use the hook -
   });
 ```
 
-2. When the component mounts and unmounts(the return callback). empty array in dependency array parameter means callback will execute on component mount and return call back will execute on unmount
+2. When the component mounts and unmounts(the return callback). empty array in dependency array parameter means callback will execute on component mount and return call back will execute on unmount. When the useState reruns based on the dependency, the return function runs first and then the actual function.
 ```JSX
   useEffect(() => {
     console.log("Component mounted");
